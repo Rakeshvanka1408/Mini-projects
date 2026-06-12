@@ -1,0 +1,37 @@
+package com.speshway;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class SalaryManagementSystem {
+	ArrayList<Employee> employees = new ArrayList<>();
+	Scanner sc = new Scanner(System.in);
+
+	public void addEmployee() {
+		System.out.println("Enter emp id");
+		int id = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Enter emp name");
+		String name = sc.nextLine();
+		System.out.println("Enter the basic salary");
+		double salary = sc.nextDouble();
+		employees.add(new Employee(id, name, salary));
+
+	}
+
+	public void viewEmployees() {
+		for(Employee list : employees) {
+			System.out.println(list.getEmpId());
+			System.out.println(list.getEmpName());
+			System.out.println(list.getSalary());
+			
+			
+		}
+	}
+
+	public static void main(String[] args) {
+		SalaryManagementSystem sms = new SalaryManagementSystem();
+		sms.addEmployee();
+	//	sms.viewEmployees();
+	}
+}

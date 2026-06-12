@@ -1,0 +1,118 @@
+package com.speshway;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class SalaryManagementSystem {
+	static ArrayList<Employee> employees = new ArrayList<>();
+	static Scanner sc = new Scanner(System.in);
+
+	public static void addEmployee() throws InvalidDataException {
+		System.out.println("Enter emp id");
+		int id = sc.nextInt();
+		sc.nextLine();
+		try {
+			if (id <= 0) {
+				throw new InvalidDataException("invalid data entered. please verify it!!");
+			}
+			System.out.println("Enter emp name");
+			String name = sc.nextLine();
+			if (name ==null || name.trim().isEmpty()) {
+				throw new InvalidDataException("invalid name entered");
+			}
+			System.out.println("Enter the basic salary");
+			double salary = sc.nextDouble();
+			if (salary <= 0) {
+				throw new InvalidDataException("salary must be greater than 0");
+			}
+
+			employees.add(new Employee(id, name, salary));
+			System.out.println("Employee record added successfully");
+		} catch (InvalidDataException e) {
+			System.out.println("exception caught: "+ e.getMessage());
+		}
+	}
+
+	public static void viewEmployees() {
+		if (employees.isEmpty()) {
+			System.out.println("no records found");
+		}
+		for (Employee list : employees) {
+			System.out.print(list.getEmpId() + "  ");
+			System.out.print(list.getEmpName() + "  ");
+			System.out.println(list.getSalary());
+
+		}
+	}
+
+	public static void searchEmployee() {
+		System.out.println("Enter the empId");
+		int id = sc.nextInt();
+		for (Employee list : employees) {
+			if (list.getEmpId() == id) {
+				System.out.println("----emoployee record found----");
+				list.salarySlip();
+				return;
+			}
+		}
+		System.out.println("no records found to retrieve");
+	}
+
+	public static void deleteEmployee() {
+		System.out.println("Enter the empId");
+		int id = sc.nextInt();
+		for (Employee emp : employees) {
+			if (emp.getEmpId() == id) {
+				employees.remove(emp);
+				System.out.println("Employee record deleted successfully");
+				return;
+			}
+		}
+		System.out.println("no record found to delte");
+	}
+
+	public static void main(String[] args) {
+		SalaryManagementSystem sms = new SalaryManagementSystem();
+		System.out.println("====== Employee salary management system");
+
+		boolean b = true;
+		while (b) {
+			System.out.println("1.add employee");
+			System.out.println("2.view employees");
+			System.out.println("3.search employee");
+			System.out.println("4.delete employee");
+			System.out.println("5.salary slip of employee");
+			System.out.println("6.exit");
+			System.out.println("Select one of the option to proceed");
+			int choice = sc.nextInt();
+			switch (choice) {
+			case 1:
+				try {
+					addEmployee();
+				} catch (InvalidDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case 2:
+				viewEmployees();
+				break;
+			case 3:
+				searchEmployee();
+				break;
+			case 4:
+				deleteEmployee();
+				break;
+			case 5:
+				searchEmployee();
+				break;
+			case 6:
+				System.exit(0);
+				break;
+			default:
+				System.out.println("invalid choice");
+				break;
+			}
+		}
+	}
+}
