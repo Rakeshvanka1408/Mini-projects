@@ -16,7 +16,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		String sql = "INSERT INTO employee_data " + "(emp_id, emp_name, department, salary, email) "
 				+ "VALUES (?, ?, ?, ?, ?)";
 
-		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection(); 
+				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, employee.getEmpId());
 			ps.setString(2, employee.getEmpName());
@@ -42,7 +43,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 		String sql = "SELECT * FROM employee_data " + "WHERE emp_id = ?";
 
-		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, empId);
 
@@ -93,7 +95,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		String sql = "UPDATE employee_data " + "SET emp_name=?, department=?, " + "salary=?, email=? "
 				+ "WHERE emp_id=?";
 
-		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, employee.getEmpName());
 
@@ -121,7 +124,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 		String sql = "DELETE FROM employee_data " + "WHERE emp_id=?";
 
-		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection(); 
+				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, empId);
 
@@ -141,7 +145,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 		String sql = "SELECT emp_id " + "FROM employee_data " + "WHERE emp_id=?";
 
-		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, empId);
 
