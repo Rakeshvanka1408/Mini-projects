@@ -13,7 +13,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public void addEmployee(Employee employee) {
 
-		String sql = "INSERT INTO employee_data " + "(emp_id, emp_name, department, salary, email) "
+		String sql = "INSERT INTO employee_data " + "(emp_id, emp_name, department, salary, email_id) "
 				+ "VALUES (?, ?, ?, ?, ?)";
 
 		try (Connection con = DBUtil.getConnection(); 
@@ -53,7 +53,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			if (rs.next()) {
 
 				employee = new Employee(rs.getInt("emp_id"), rs.getString("emp_name"),
-						Department.valueOf(rs.getString("department")), rs.getString("email"), rs.getDouble("salary"));
+						Department.valueOf(rs.getString("department")), rs.getString("email_id"), rs.getDouble("salary"));
 			}
 
 		} catch (Exception e) {
@@ -77,7 +77,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			while (rs.next()) {
 
 				Employee employee = new Employee(rs.getInt("emp_id"), rs.getString("emp_name"),
-						Department.valueOf(rs.getString("department")), rs.getString("email"), rs.getDouble("salary"));
+						Department.valueOf(rs.getString("department")), rs.getString("email_id"), rs.getDouble("salary"));
 
 				employees.add(employee);
 			}
@@ -92,7 +92,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public void updateEmployee(Employee employee) {
 
-		String sql = "UPDATE employee_data " + "SET emp_name=?, department=?, " + "salary=?, email=? "
+		String sql = "UPDATE employee_data " + "SET emp_name=?, department=?, " + "salary=?, email_id=? "
 				+ "WHERE emp_id=?";
 
 		try (Connection con = DBUtil.getConnection();

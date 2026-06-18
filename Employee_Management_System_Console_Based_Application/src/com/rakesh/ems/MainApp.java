@@ -1,5 +1,8 @@
-package com.rakesh.ems;
+package com
+.rakesh.ems;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,12 +10,15 @@ import com.rakesh.ems.model.Department;
 import com.rakesh.ems.model.Employee;
 import com.rakesh.ems.service.EmployeeService;
 import com.rakesh.ems.service.EmployeeServiceImpl;
+import com.rakesh.ems.threads.ReportThread;
+import com.rakesh.ems.threads.SaveThread;
+import com.rakesh.ems.util.FileUtil;
 
 public class MainApp {
 	private static EmployeeService service = new EmployeeServiceImpl();
 	private static Scanner sc = new Scanner(System.in);
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		boolean login = login();
 		if (!login) {
@@ -21,7 +27,7 @@ public class MainApp {
 		}
 		System.out.println("Available Departments:");
 		for (Department d : Department.values()) {
-		    System.out.println(d);
+			System.out.println(d);
 		}
 		System.out.println();
 		boolean b = true;
@@ -35,7 +41,9 @@ public class MainApp {
 			System.out.println("6. Dashboard");
 			System.out.println("7. Save Employees To File");
 			System.out.println("8. Read Employees From File");
-			System.out.println("9. Exit");
+			System.out.println("9. SaveThread");
+			System.out.println("10. GenerateReportThread");
+			System.out.println("11. Exit");
 			System.out.print("Enter Choice : ");
 			int choice = sc.nextInt();
 
@@ -58,13 +66,38 @@ public class MainApp {
 			case 6:
 				service.generateDashboard();
 				break;
+			case 7:
+				saveFile();
+				break;
+			case 8:
+				readFile();
+				break;
 			case 9:
+				saveThread();
+				break;
+			case 10:
+				generateReportThread();
+				break;
+			case 11:
 				b = false;
-				System.out.println("application execution terminated ");
+				System.err.println("application execution terminated ");
 				break;
 
 			}
 		}
+	}
+
+	private static boolean login() {
+		System.out.println("=============USER LOGIN =========");
+		System.out.println("enter the user name");
+		String userName = sc.nextLine();
+		System.out.println("enter the password");
+		String pwd = sc.nextLine();
+
+		if (userName.equals("rakesh") && pwd.equals("rakesh@123")) {
+			return true;
+		}
+		return false;
 	}
 
 	public static void addEmployee() {
@@ -74,7 +107,7 @@ public class MainApp {
 		System.out.println("enter the empName: ");
 		String empName = sc.nextLine();
 		System.out.println("enter the department(IT,HR,SALES,FINANCE): ");
-		Department dName = Department.valueOf(sc.nextLine().toUpperCase());
+		Department dName = Department.valueOf(sc.next().toUpperCase());
 		System.out.println("enter the salary: ");
 		double salary = sc.nextDouble();
 		sc.nextLine();
@@ -87,15 +120,21 @@ public class MainApp {
 
 	public static void viewEmployees() {
 		List<Employee> viewAllEmployees = service.viewAllEmployees();
-		while (!viewAllEmployees.isEmpty()) {
-			for (Employee emps : viewAllEmployees) {
-				System.out.println(emps.getEmpId());
-				System.out.println(emps.getEmpName());
-				System.out.println(emps.getDepartment().name());
-				System.out.println(emps.getEmail());
-				System.out.println(emps.getSalary());
+		if (viewAllEmployees.isEmpty()) {
+			System.out.println("No employee records found ");
+			return;
+		}
+		int count = 1;
+		for (Employee emps : viewAllEmployees) {
 
-			}
+			System.out.print(count + "==>  ");
+			System.out.print(emps.getEmpId() + " , ");
+			System.out.print(emps.getEmpName() + " , ");
+			System.out.print(emps.getDepartment().name() + " , ");
+			System.out.print(emps.getEmail() + " , ");
+			System.out.print(emps.getSalary());
+			count++;
+			System.out.println();
 		}
 	}
 
@@ -103,8 +142,13 @@ public class MainApp {
 		System.out.println("enter empId of the employee to search ");
 		int empId = sc.nextInt();
 		Employee employees = service.searchEmployees(empId);
-		if(employees !=null) {
-			System.out.println(employees);
+		if (employees != null) {
+			System.out.println("employee details with emp_id: " + empId);
+			System.out.print(employees.getEmpId());
+			System.out.println(employees.getEmpName());
+			System.out.println(employees.getDepartment().name());
+			System.out.println(employees.getEmail());
+			System.out.println(employees.getSalary());
 		}
 
 	}
@@ -133,16 +177,32 @@ public class MainApp {
 		service.deleteEmployee(empId);
 	}
 
-	private static boolean login() {
-		System.out.println("=============USER LOGIN =========");
-		System.out.println("enter the user name");
-		String userName = sc.nextLine();
-		System.out.println("enter the password");
-		String pwd = sc.nextLine();
+	public static void saveFile() throws IOException {
+		List<Employee> allEmployees = service.viewAllEmployees();
+		FileUtil.saveEmployees(allEmployees);
 
-		if (userName.equals("rakesh") && pwd.equals("rakesh@123")) {
-			return true;
-		}
-		return false;
 	}
+
+	public static void saveThread() throws InterruptedException {
+
+		List<Employee> viewAllEmployees = service.viewAllEmployees();
+		Thread t = new Thread(new SaveThread(viewAllEmployees));
+		t.start();
+		t.join();
+	}
+
+	public static void generateReportThread() throws InterruptedException {
+		List<Employee> viewAllEmployees = service.viewAllEmployees();
+		Thread t2 = new Thread(new ReportThread(viewAllEmployees));
+		t2.start();
+		t2.join();
+	}
+
+	public static void readFile() throws Exception {
+		ArrayList<String> employees = FileUtil.readEmployees();
+		for (String emps : employees) {
+			System.out.println(emps);
+		}
+	}
+
 }

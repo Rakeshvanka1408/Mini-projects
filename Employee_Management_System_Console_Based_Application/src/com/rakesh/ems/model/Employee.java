@@ -36,4 +36,12 @@ public class Employee {
 		System.out.println("employee email address: "+email);
 		System.out.println("deparment: "+department);
 	}
+	@Override
+	public String toString() {
+	    return empId + "," +
+	           empName + "," +
+	           department + "," +
+	           email + "," +
+	           salary;
+	}
 }

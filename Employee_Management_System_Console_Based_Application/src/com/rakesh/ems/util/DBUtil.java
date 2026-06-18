@@ -5,36 +5,29 @@ import java.sql.DriverManager;
 
 public class DBUtil {
 
-    private static final String URL =
-            "jdbc:mysql://localhost:3306/employee_db";
+	private static final String URL = "jdbc:mysql://localhost:3306/employee_db";
 
-    private static final String USER =
-            "root";
+	private static final String USER = "root";
 
-    private static final String PASSWORD =
-            "root";
+	private static final String PASSWORD = "root";
 
-    private DBUtil() {
-    }
+	private DBUtil() {
+	}
 
-    public static Connection getConnection() {
+	public static Connection getConnection() {
 
-        Connection con = null;
+		Connection con = null;
 
-        try {
+		try {
 
-            Class.forName(
-                    "com.mysql.cj.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
-            con = DriverManager.getConnection(
-                    URL,
-                    USER,
-                    PASSWORD);
+			con = DriverManager.getConnection(URL, USER, PASSWORD);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        return con;
-    }
+		return con;
+	}
 }
