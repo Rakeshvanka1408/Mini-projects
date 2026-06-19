@@ -13,18 +13,20 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public void addEmployee(Employee employee) {
 
-		String sql = "INSERT INTO employee_data " + "(emp_id, emp_name, department, salary, email_id) "
-				+ "VALUES (?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO employee_data "
+				+ "(emp_id, emp_name, department, salary, email_id,technology,employee_type,team_size) "
+				+ "VALUES (?, ?, ?, ?, ?, ? ,?, ?)";
 
-		try (Connection con = DBUtil.getConnection(); 
-				PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, employee.getEmpId());
 			ps.setString(2, employee.getEmpName());
 			ps.setString(3, employee.getDepartment().name());
 			ps.setDouble(4, employee.getSalary());
 			ps.setString(5, employee.getEmail());
-
+			ps.setString(6, employee.getTechnology());
+			ps.setString(7, employee.getEmployeeType());
+			ps.setInt(8, employee.getTeamSize());
 			int rows = ps.executeUpdate();
 
 			if (rows > 0) {
@@ -43,8 +45,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 		String sql = "SELECT * FROM employee_data " + "WHERE emp_id = ?";
 
-		try (Connection con = DBUtil.getConnection();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, empId);
 
@@ -53,7 +54,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			if (rs.next()) {
 
 				employee = new Employee(rs.getInt("emp_id"), rs.getString("emp_name"),
-						Department.valueOf(rs.getString("department")), rs.getString("email_id"), rs.getDouble("salary"));
+						Department.valueOf(rs.getString("department")), rs.getString("email_id"),
+						rs.getDouble("salary"), rs.getString("technology"), rs.getInt("team_size"),
+						rs.getString("employee_type"));
 			}
 
 		} catch (Exception e) {
@@ -77,7 +80,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			while (rs.next()) {
 
 				Employee employee = new Employee(rs.getInt("emp_id"), rs.getString("emp_name"),
-						Department.valueOf(rs.getString("department")), rs.getString("email_id"), rs.getDouble("salary"));
+						Department.valueOf(rs.getString("department")), rs.getString("email_id"),
+						rs.getDouble("salary"), rs.getString("technology"), rs.getInt("team_size"),
+						rs.getString("employee_type"));
 
 				employees.add(employee);
 			}
@@ -92,21 +97,19 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public void updateEmployee(Employee employee) {
 
-		String sql = "UPDATE employee_data " + "SET emp_name=?, department=?, " + "salary=?, email_id=? "
-				+ "WHERE emp_id=?";
+		String sql = "UPDATE employee_data SET " + "emp_name=?, " + "department=?, " + "salary=?, " + "email_id=?, "
+				+ "technology=?, " + "employee_type=?, " + "team_size=? " + "WHERE emp_id=?";
 
-		try (Connection con = DBUtil.getConnection();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, employee.getEmpName());
-
 			ps.setString(2, employee.getDepartment().name());
-
 			ps.setDouble(3, employee.getSalary());
-
 			ps.setString(4, employee.getEmail());
-
-			ps.setInt(5, employee.getEmpId());
+			ps.setString(5, employee.getTechnology());
+			ps.setString(6, employee.getEmployeeType());
+			ps.setInt(7, employee.getTeamSize());
+			ps.setInt(8, employee.getEmpId());
 
 			int rows = ps.executeUpdate();
 
@@ -124,8 +127,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 		String sql = "DELETE FROM employee_data " + "WHERE emp_id=?";
 
-		try (Connection con = DBUtil.getConnection(); 
-				PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, empId);
 
@@ -145,8 +147,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 		String sql = "SELECT emp_id " + "FROM employee_data " + "WHERE emp_id=?";
 
-		try (Connection con = DBUtil.getConnection();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, empId);
 

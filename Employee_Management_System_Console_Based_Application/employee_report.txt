@@ -1,4 +1,6 @@
 ======== employee reports =========
-1,rakesh,IT,rakesh123@gmail.com,30000.0
-2,Naruto,IT,naruto11@gmail.com,50000.0
-3,luffy,SALES,luffy10@gmail.com,25000.0
+Employee [empId=1, empName=rakesh, department=IT, salary=30000.0, email=rakesh123@gmail.com, technology=null, teamSize=0, employeeType=null]
+Employee [empId=2, empName=Naruto, department=IT, salary=50000.0, email=naruto11@gmail.com, technology=null, teamSize=0, employeeType=null]
+Employee [empId=3, empName=luffy, department=SALES, salary=25000.0, email=luffy10@gmail.com, technology=null, teamSize=0, employeeType=null]
+Employee [empId=6, empName=ichigo kurosaki, department=IT, salary=79779.0, email=ichigo6@gmail.com, technology=python, teamSize=8, employeeType=developer]
+Employee [empId=88, empName=tanjiro, department=FINANCE, salary=20000.0, email=tanjiro88@gmail.com, technology=null, teamSize=0, employeeType=null]

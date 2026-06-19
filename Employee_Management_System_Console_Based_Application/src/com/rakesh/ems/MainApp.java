@@ -113,8 +113,13 @@ public class MainApp {
 		sc.nextLine();
 		System.out.println("enter the email address: ");
 		String email = sc.nextLine();
-
-		Employee employee = new Employee(empId, empName, dName, email, salary);
+		System.out.println("enter the technology employee is working in: ");
+		String tech = sc.nextLine();
+		System.out.println("enter the employee type: ");
+		String employeeType = sc.nextLine();
+		System.out.println("enter the team size: ");
+		int teamSize = sc.nextInt();
+		Employee employee = new Employee(empId, empName, dName, email, salary,tech,teamSize,employeeType);
 		service.addEmployee(employee);
 	}
 
@@ -144,11 +149,14 @@ public class MainApp {
 		Employee employees = service.searchEmployees(empId);
 		if (employees != null) {
 			System.out.println("employee details with emp_id: " + empId);
-			System.out.print(employees.getEmpId());
-			System.out.println(employees.getEmpName());
-			System.out.println(employees.getDepartment().name());
-			System.out.println(employees.getEmail());
-			System.out.println(employees.getSalary());
+			System.out.println("ID : " + employees.getEmpId());
+			System.out.println("Name : " + employees.getEmpName());
+			System.out.println("Department : " + employees.getDepartment());
+			System.out.println("Email : " + employees.getEmail());
+			System.out.println("Salary : " + employees.getSalary());
+			System.out.println("Technology : " + employees.getTechnology());
+			System.out.println("Team Size : " + employees.getTeamSize());
+			System.out.println("Employee Type : " + employees.getEmployeeType());
 		}
 
 	}
@@ -164,10 +172,16 @@ public class MainApp {
 		Department dName = Department.valueOf(sc.next().toUpperCase());
 		System.out.println("enter the salary: ");
 		double salary = sc.nextDouble();
+		sc.nextLine();
 		System.out.println("enter the email address: ");
 		String email = sc.next();
-
-		Employee employee = new Employee(empId, empName, dName, email, salary);
+		System.out.println("enter the technology employee is working in: ");
+		String tech = sc.nextLine();
+		System.out.println("enter the employee type: ");
+		String employeeType = sc.nextLine();
+		System.out.println("enter the team size: ");
+		int teamSize = sc.nextInt();
+		Employee employee = new Employee(empId, empName, dName, email, salary,tech,teamSize,employeeType);
 		service.updateEmployee(employee);
 	}
 

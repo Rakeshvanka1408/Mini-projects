@@ -85,19 +85,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public boolean employeeExists(int empId) {
-		try {
-			if (!dao.employeeExists(empId)) {
-				throw new EmployeeNotFoundException("There is no emplolyee with the give details to update");
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return true;
+	    return dao.employeeExists(empId);
 	}
 
 	@Override
 	public void generateDashboard() {
 		List<Employee> allEmployees = dao.getAllEmployees();
+		if(allEmployees.isEmpty()) {
+		    System.out.println("No employee data available.");
+		    return;
+		}
 		int totalEmployees = allEmployees.size();
 		double highestSal = allEmployees.stream().mapToDouble(Employee::getSalary).max().orElse(0);
 		double lowestSal = allEmployees.stream().mapToDouble(Employee::getSalary).min().orElse(0);
