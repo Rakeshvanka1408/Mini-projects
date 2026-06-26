@@ -1,0 +1,30 @@
+package com.rakesh.elams.controller;
+
+import java.io.IOException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+@WebServlet("/employeeDashboardServlet")
+public class EmployeeDashboardServlet extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		HttpSession session = request.getSession(false);
+
+		if (session == null) {
+
+			response.sendRedirect("login.jsp");
+
+			return;
+		}
+
+		request.getRequestDispatcher("employeeDashboard.jsp").forward(request, response);
+	}
+}
