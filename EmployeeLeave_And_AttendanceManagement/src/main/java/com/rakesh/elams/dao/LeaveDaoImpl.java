@@ -17,11 +17,11 @@ public class LeaveDaoImpl implements LeaveDao {
 		try (Connection con = DbUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setInt(1, leave.getLeaveId());
 			ps.setInt(2, leave.getEmployeeId());
-			ps.setString(2, leave.getLeaveType());
-			ps.setDate(3, leave.getStartDate());
-			ps.setDate(4, leave.getEndDate());
-			ps.setString(5, leave.getReason());
-			ps.setString(6, leave.getStatus());
+			ps.setString(3, leave.getLeaveType());
+			ps.setDate(4, leave.getStartDate());
+			ps.setDate(5, leave.getEndDate());
+			ps.setString(6, leave.getReason());
+			ps.setString(7, leave.getStatus());
 			return ps.executeUpdate() > 0;
 		} catch (Exception e) {
 			e.printStackTrace();

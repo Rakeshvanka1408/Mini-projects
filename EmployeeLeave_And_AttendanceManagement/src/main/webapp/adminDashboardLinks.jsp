@@ -1,4 +1,4 @@
-<a href="employees">
+<a href="viewEmployeeServlet">
 Manage Employees
 </a>
 

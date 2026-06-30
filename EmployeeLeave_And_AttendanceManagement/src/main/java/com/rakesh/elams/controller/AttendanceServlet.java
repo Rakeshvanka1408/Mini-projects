@@ -3,6 +3,7 @@ package com.rakesh.elams.controller;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 
 import com.rakesh.elams.dao.AttendanceDao;
 import com.rakesh.elams.dao.AttendanceDaoImpl;
@@ -16,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/markAttendance")
 public class AttendanceServlet extends HttpServlet {
-
+ 
     private AttendanceDao attendanceDao;
 
     @Override
@@ -42,16 +43,11 @@ public class AttendanceServlet extends HttpServlet {
                         request.getParameter(
                                 "attendanceDate")));
 
-        attendance.setCheck_in_time(
-                Time.valueOf(
-                        request.getParameter(
-                                "checkIn")));
+        LocalTime checkIn = LocalTime.parse(request.getParameter("checkIn"));
+        LocalTime checkOut = LocalTime.parse(request.getParameter("checkOut"));
 
-        attendance.setCheck_out_time(
-                Time.valueOf(
-                        request.getParameter(
-                                "checkOut")));
-
+        attendance.setCheck_in_time(Time.valueOf(checkIn));
+        attendance.setCheck_out_time(Time.valueOf(checkOut));
         attendance.setStatus(
                 request.getParameter(
                         "status"));
