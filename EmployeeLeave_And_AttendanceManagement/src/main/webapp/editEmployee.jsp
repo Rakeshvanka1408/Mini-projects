@@ -500,7 +500,7 @@ footer {
 		</div>
 
 		<!-- Back Link -->
-		<a href="employees" class="back-link">← Back to Employees List</a>
+		<a href="viewEmployeesServlet" class="back-link">← Back to Employees List</a>
 
 	</div>
 

@@ -10,6 +10,7 @@ public class Attendance {
 		private Time check_out_time;
 		private String status;
 		private int employee_id;
+		private String employeeName;
 		public Attendance() {
 			
 		}
@@ -64,6 +65,12 @@ public class Attendance {
 			this.status = status;
 		}
 
+		public String getEmployeeName() {
+			return employeeName;
+		}
+		public void setEmployeeName(String employeeName) {
+			this.employeeName = employeeName;
+		}
 		@Override
 		public String toString() {
 			return "Attendance [attendance_id=" + attendance_id + ", attendance_date=" + attendance_date

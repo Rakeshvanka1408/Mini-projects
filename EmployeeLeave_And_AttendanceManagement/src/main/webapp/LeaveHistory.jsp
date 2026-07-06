@@ -432,7 +432,7 @@
 		<!-- ===== ACTION BUTTONS ===== -->
 		<div class="action-bar">
 			<a href="applyLeave.jsp" class="btn-apply">+ Apply New Leave</a>
-			<a href="employees" class="btn-back">← Back to Dashboard</a>
+			<a href="employeeDashboard.jsp" class="btn-back">← Back to Dashboard</a>
 		</div>
 
 		<!-- ===== LEAVE HISTORY TABLE SECTION ===== -->

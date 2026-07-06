@@ -228,17 +228,17 @@ footer {
 }
 
 /* Loading Animation */
-@
-keyframes fadeIn {from { opacity:0;
-	transform: translateY(10px);
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
-to {
-	opacity: 1;
-	transform: translateY(0);
-}
-
-}
 .card {
 	animation: fadeIn 0.5s ease-out;
 }
@@ -365,10 +365,11 @@ to {
 		<div class="actions-section">
 			<h2>Quick Actions</h2>
 			<div class="actions-grid">
-				<a href="viewEmployeesServlet" class="action-link">Manage
-					Employees</a> <a href="attendance.jsp" class="action-link">Mark
-					Attendance</a> <a href="leaveRequests" class="action-link">Manage
-					Leave Requests</a> <a href="logout" class="action-link danger">Logout</a>
+				<a href="viewEmployeesServlet" class="action-link">Manage Employees</a>
+				<a href="attendance.jsp" class="action-link">Mark Attendance</a>
+				<a href="leaveRequests" class="action-link">Manage Leave Requests</a>
+				<a href="reports" class="action-link">View Reports</a>
+				<a href="logout" class="action-link danger">Logout</a>
 			</div>
 		</div>
 

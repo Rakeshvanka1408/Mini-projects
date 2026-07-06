@@ -1,316 +1,307 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Mark Attendance - ELAMS</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mark Attendance - ELAMS</title>
 
-	<style>
-		/* RESET - Remove default browser spacing */
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
+<style>
+/* RESET - Remove default browser spacing */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
 
-		/* BODY - Main page styling */
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #f5f5f5;
-			color: #333;
-		}
+/* BODY - Main page styling */
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f5f5f5;
+	color: #333;
+}
 
-		/* ===== HEADER/NAVBAR ===== */
-		.navbar {
-			background-color: #2c3e50;
-			color: white;
-			padding: 15px 20px;
-			text-align: center;
-			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-		}
+/* ===== HEADER/NAVBAR ===== */
+.navbar {
+	background-color: #2c3e50;
+	color: white;
+	padding: 15px 20px;
+	text-align: center;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-		.navbar h1 {
-			font-size: 24px;
-			font-weight: bold;
-		}
+.navbar h1 {
+	font-size: 24px;
+	font-weight: bold;
+}
 
-		/* ===== MAIN CONTAINER ===== */
-		.container {
-			max-width: 700px;
-			margin: 30px auto;
-			padding: 0 20px;
-		}
+/* ===== MAIN CONTAINER ===== */
+.container {
+	max-width: 700px;
+	margin: 30px auto;
+	padding: 0 20px;
+}
 
-		/* Page Title */
-		.page-title {
-			font-size: 28px;
-			color: #2c3e50;
-			margin-bottom: 10px;
-			text-align: center;
-		}
+/* Page Title */
+.page-title {
+	font-size: 28px;
+	color: #2c3e50;
+	margin-bottom: 10px;
+	text-align: center;
+}
 
-		/* Page Subtitle */
-		.page-subtitle {
-			font-size: 14px;
-			color: #7f8c8d;
-			text-align: center;
-			margin-bottom: 30px;
-		}
+/* Page Subtitle */
+.page-subtitle {
+	font-size: 14px;
+	color: #7f8c8d;
+	text-align: center;
+	margin-bottom: 30px;
+}
 
-		/* ===== FORM STYLING ===== */
+/* ===== FORM STYLING ===== */
 
-		/* Form Container */
-		.form-container {
-			background-color: white;
-			border: 2px solid #bdc3c7;
-			border-radius: 8px;
-			padding: 30px;
-			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-		}
+/* Form Container */
+.form-container {
+	background-color: white;
+	border: 2px solid #bdc3c7;
+	border-radius: 8px;
+	padding: 30px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
-		/* Form Row - For two columns on desktop */
-		.form-row {
-			display: flex;
-			gap: 20px;
-			margin-bottom: 0;
-		}
+/* Form Row - For two columns on desktop */
+.form-row {
+	display: flex;
+	gap: 20px;
+	margin-bottom: 0;
+}
 
-		/* Form Group - Each field wrapper */
-		.form-group {
-			margin-bottom: 20px;
-			flex: 1;
-		}
+/* Form Group - Each field wrapper */
+.form-group {
+	margin-bottom: 20px;
+	flex: 1;
+}
 
-		.form-row .form-group {
-			margin-bottom: 0;
-		}
+.form-row .form-group {
+	margin-bottom: 0;
+}
 
-		/* Label Styling */
-		.form-group label {
-			display: block;
-			font-weight: bold;
-			color: #2c3e50;
-			margin-bottom: 8px;
-			font-size: 14px;
-		}
+/* Label Styling */
+.form-group label {
+	display: block;
+	font-weight: bold;
+	color: #2c3e50;
+	margin-bottom: 8px;
+	font-size: 14px;
+}
 
-		/* Required field indicator */
-		.form-group label .required {
-			color: #e74c3c;
-		}
+/* Required field indicator */
+.form-group label .required {
+	color: #e74c3c;
+}
 
-		/* Input Fields Styling */
-		.form-group input[type="text"],
-		.form-group input[type="number"],
-		.form-group input[type="date"],
-		.form-group input[type="time"],
-		.form-group select {
-			width: 100%;
-			padding: 10px 12px;
-			border: 1px solid #bdc3c7;
-			border-radius: 4px;
-			font-size: 14px;
-			font-family: Arial, sans-serif;
-			transition: all 0.3s;
-		}
+/* Input Fields Styling */
+.form-group input[type="text"], .form-group input[type="number"],
+	.form-group input[type="date"], .form-group input[type="time"],
+	.form-group select {
+	width: 100%;
+	padding: 10px 12px;
+	border: 1px solid #bdc3c7;
+	border-radius: 4px;
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+	transition: all 0.3s;
+}
 
-		/* Input Focus Effect */
-		.form-group input[type="text"]:focus,
-		.form-group input[type="number"]:focus,
-		.form-group input[type="date"]:focus,
-		.form-group input[type="time"]:focus,
-		.form-group select:focus {
-			outline: none;
-			border-color: #3498db;
-			box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-			background-color: #f9f9f9;
-		}
+/* Input Focus Effect */
+.form-group input[type="text"]:focus, .form-group input[type="number"]:focus,
+	.form-group input[type="date"]:focus, .form-group input[type="time"]:focus,
+	.form-group select:focus {
+	outline: none;
+	border-color: #3498db;
+	box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+	background-color: #f9f9f9;
+}
 
-		/* Input Placeholder */
-		.form-group input::placeholder {
-			color: #95a5a6;
-		}
+/* Input Placeholder */
+.form-group input::placeholder {
+	color: #95a5a6;
+}
 
-		/* Help Text */
-		.form-group .help-text {
-			font-size: 12px;
-			color: #95a5a6;
-			margin-top: 5px;
-		}
+/* Help Text */
+.form-group .help-text {
+	font-size: 12px;
+	color: #95a5a6;
+	margin-top: 5px;
+}
 
-		/* Buttons Container */
-		.button-group {
-			display: flex;
-			gap: 10px;
-			justify-content: center;
-			margin-top: 30px;
-		}
+/* Buttons Container */
+.button-group {
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+	margin-top: 30px;
+}
 
-		/* Submit Button */
-		.btn-submit {
-			background-color: #3498db;
-			color: white;
-			padding: 12px 30px;
-			border: none;
-			border-radius: 4px;
-			font-size: 16px;
-			font-weight: bold;
-			cursor: pointer;
-			transition: all 0.3s;
-			flex: 1;
-			max-width: 150px;
-		}
+/* Submit Button */
+.btn-submit {
+	background-color: #3498db;
+	color: white;
+	padding: 12px 30px;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.3s;
+	flex: 1;
+	max-width: 150px;
+}
 
-		/* Submit Button Hover Effect */
-		.btn-submit:hover {
-			background-color: #2980b9;
-			transform: translateY(-2px);
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-		}
+/* Submit Button Hover Effect */
+.btn-submit:hover {
+	background-color: #2980b9;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
-		/* Submit Button Active Effect */
-		.btn-submit:active {
-			transform: translateY(0);
-		}
+/* Submit Button Active Effect */
+.btn-submit:active {
+	transform: translateY(0);
+}
 
-		/* Reset Button */
-		.btn-reset {
-			background-color: #95a5a6;
-			color: white;
-			padding: 12px 30px;
-			border: none;
-			border-radius: 4px;
-			font-size: 16px;
-			font-weight: bold;
-			cursor: pointer;
-			transition: all 0.3s;
-			flex: 1;
-			max-width: 150px;
-		}
+/* Reset Button */
+.btn-reset {
+	background-color: #95a5a6;
+	color: white;
+	padding: 12px 30px;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.3s;
+	flex: 1;
+	max-width: 150px;
+}
 
-		/* Reset Button Hover Effect */
-		.btn-reset:hover {
-			background-color: #7f8c8d;
-			transform: translateY(-2px);
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-		}
+/* Reset Button Hover Effect */
+.btn-reset:hover {
+	background-color: #7f8c8d;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
-		/* Back Link */
-		.back-link {
-			display: inline-block;
-			margin-top: 20px;
-			color: #3498db;
-			text-decoration: none;
-			font-size: 14px;
-			transition: color 0.3s;
-		}
+/* Back Link */
+.back-link {
+	display: inline-block;
+	margin-top: 20px;
+	color: #3498db;
+	text-decoration: none;
+	font-size: 14px;
+	transition: color 0.3s;
+}
 
-		.back-link:hover {
-			color: #2980b9;
-			text-decoration: underline;
-		}
+.back-link:hover {
+	color: #2980b9;
+	text-decoration: underline;
+}
 
-		/* ===== INFO BOX ===== */
-		.info-box {
-			background-color: #ecf0f1;
-			border-left: 4px solid #3498db;
-			padding: 15px;
-			border-radius: 4px;
-			margin-bottom: 25px;
-			font-size: 13px;
-			color: #2c3e50;
-			line-height: 1.6;
-		}
+/* ===== INFO BOX ===== */
+.info-box {
+	background-color: #ecf0f1;
+	border-left: 4px solid #3498db;
+	padding: 15px;
+	border-radius: 4px;
+	margin-bottom: 25px;
+	font-size: 13px;
+	color: #2c3e50;
+	line-height: 1.6;
+}
 
-		/* ===== ALERT MESSAGES ===== */
-		.alert {
-			padding: 12px 15px;
-			border-radius: 4px;
-			margin-bottom: 20px;
-			border-left: 4px solid;
-		}
+/* ===== ALERT MESSAGES ===== */
+.alert {
+	padding: 12px 15px;
+	border-radius: 4px;
+	margin-bottom: 20px;
+	border-left: 4px solid;
+}
 
-		.alert-success {
-			background-color: #d4edda;
-			border-left-color: #27ae60;
-			color: #155724;
-		}
+.alert-success {
+	background-color: #d4edda;
+	border-left-color: #27ae60;
+	color: #155724;
+}
 
-		.alert-error {
-			background-color: #f8d7da;
-			border-left-color: #e74c3c;
-			color: #721c24;
-		}
+.alert-error {
+	background-color: #f8d7da;
+	border-left-color: #e74c3c;
+	color: #721c24;
+}
 
-		/* ===== STATUS BADGE ===== */
-		.status-badge {
-			display: inline-block;
-			padding: 4px 10px;
-			border-radius: 20px;
-			font-size: 11px;
-			font-weight: bold;
-			text-transform: uppercase;
-		}
+/* ===== STATUS BADGE ===== */
+.status-badge {
+	display: inline-block;
+	padding: 4px 10px;
+	border-radius: 20px;
+	font-size: 11px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
 
-		.status-present {
-			background-color: #d4edda;
-			color: #155724;
-		}
+.status-present {
+	background-color: #d4edda;
+	color: #155724;
+}
 
-		.status-absent {
-			background-color: #f8d7da;
-			color: #721c24;
-		}
+.status-absent {
+	background-color: #f8d7da;
+	color: #721c24;
+}
 
-		.status-half-day {
-			background-color: #fff3cd;
-			color: #856404;
-		}
+.status-half-day {
+	background-color: #fff3cd;
+	color: #856404;
+}
 
-		/* ===== FOOTER ===== */
-		footer {
-			background-color: #2c3e50;
-			color: white;
-			text-align: center;
-			padding: 20px;
-			margin-top: 50px;
-			font-size: 12px;
-		}
+/* ===== FOOTER ===== */
+footer {
+	background-color: #2c3e50;
+	color: white;
+	text-align: center;
+	padding: 20px;
+	margin-top: 50px;
+	font-size: 12px;
+}
 
-		/* ===== RESPONSIVE DESIGN FOR MOBILE ===== */
-		@media (max-width: 768px) {
-			.container {
-				margin: 20px auto;
-			}
+/* ===== RESPONSIVE DESIGN FOR MOBILE ===== */
+@media ( max-width : 768px) {
+	.container {
+		margin: 20px auto;
+	}
+	.page-title {
+		font-size: 22px;
+	}
+	.form-container {
+		padding: 20px;
+	}
 
-			.page-title {
-				font-size: 22px;
-			}
-
-			.form-container {
-				padding: 20px;
-			}
-
-			/* Stack form row fields vertically */
-			.form-row {
-				flex-direction: column;
-				gap: 0;
-			}
-
-			.button-group {
-				flex-direction: column;
-			}
-
-			.btn-submit,
-			.btn-reset {
-				max-width: 100%;
-				width: 100%;
-			}
-		}
-
-	</style>
+	/* Stack form row fields vertically */
+	.form-row {
+		flex-direction: column;
+		gap: 0;
+	}
+	.button-group {
+		flex-direction: column;
+	}
+	.btn-submit, .btn-reset {
+		max-width: 100%;
+		width: 100%;
+	}
+}
+</style>
 
 </head>
 
@@ -328,13 +319,16 @@
 		<h2 class="page-title">Mark Your Attendance</h2>
 
 		<!-- Page Subtitle -->
-		<p class="page-subtitle">Record your daily attendance with check-in and check-out times</p>
+		<p class="page-subtitle">Record your daily attendance with
+			check-in and check-out times</p>
 
 		<!-- Info Box -->
 		<div class="info-box">
-			<strong>ℹ️ Note:</strong> 
+			<strong>ℹ️ Note:</strong>
 			<ul style="margin-left: 20px; margin-top: 10px;">
-				<li>All fields marked with <span style="color: #e74c3c;">*</span> are required</li>
+				<li>All fields marked with <span style="color: #e74c3c;">*</span>
+					are required
+				</li>
 				<li>Check-out time must be after check-in time</li>
 				<li>Select appropriate status for the day</li>
 			</ul>
@@ -342,62 +336,44 @@
 
 		<!-- Display Success Message if any -->
 		<%
-			String successMessage = (String) request.getAttribute("successMessage");
-			if (successMessage != null && !successMessage.isEmpty()) {
+		String successMessage = (String) request.getAttribute("successMessage");
+		if (successMessage != null && !successMessage.isEmpty()) {
 		%>
-			<div class="alert alert-success">
-				✓ <%= successMessage %>
-			</div>
+		<div class="alert alert-success">
+			✓
+			<%=successMessage%>
+		</div>
 		<%
-			}
+		}
 		%>
 
 		<!-- Display Error Message if any -->
 		<%
-			String errorMessage = (String) request.getAttribute("errorMessage");
-			if (errorMessage != null && !errorMessage.isEmpty()) {
+		String errorMessage = (String) request.getAttribute("errorMessage");
+		if (errorMessage != null && !errorMessage.isEmpty()) {
 		%>
-			<div class="alert alert-error">
-				✕ <%= errorMessage %>
-			</div>
+		<div class="alert alert-error">
+			✕
+			<%=errorMessage%>
+		</div>
 		<%
-			}
+		}
 		%>
 
 		<!-- ===== MARK ATTENDANCE FORM ===== -->
 		<div class="form-container">
-			<form action="markAttendance" method="post" onsubmit="return validateForm()">
+			<form action="markAttendance" method="post"
+				onsubmit="return validateForm()">
 
 				<!-- Row 1: Employee ID and Date -->
 				<div class="form-row">
 
-					<!-- Employee ID Field -->
-					<div class="form-group">
-						<label for="employeeId">
-							Employee ID <span class="required">*</span>
-						</label>
-						<input 
-							type="number" 
-							id="employeeId" 
-							name="employeeId" 
-							placeholder="Enter your employee ID"
-							required
-							min="1"
-							title="Please enter a valid employee ID">
-						<div class="help-text">Your unique employee identification number</div>
-					</div>
 
 					<!-- Date Field -->
 					<div class="form-group">
-						<label for="attendanceDate">
-							Date <span class="required">*</span>
-						</label>
-						<input 
-							type="date" 
-							id="attendanceDate" 
-							name="attendanceDate" 
-							required
-							title="Please select attendance date">
+						<label for="attendanceDate"> Date <span class="required">*</span>
+						</label> <input type="date" id="attendanceDate" name="attendanceDate"
+							required readonly title="Please select attendance date">
 						<div class="help-text">Select the date for attendance</div>
 					</div>
 
@@ -408,29 +384,18 @@
 
 					<!-- Check In Time -->
 					<div class="form-group">
-						<label for="checkIn">
-							Check In Time <span class="required">*</span>
-						</label>
-						<input 
-							type="time" 
-							id="checkIn" 
-							name="checkIn" 
-							required
-							title="Please enter check-in time">
+						<label for="checkIn"> Check In Time <span class="required">*</span>
+						</label> <input type="time" id="checkIn" name="checkIn" min="10:00"
+							max="11:00" required>
 						<div class="help-text">Time you arrived at work</div>
 					</div>
 
 					<!-- Check Out Time -->
 					<div class="form-group">
-						<label for="checkOut">
-							Check Out Time <span class="required">*</span>
-						</label>
-						<input 
-							type="time" 
-							id="checkOut" 
-							name="checkOut" 
-							required
-							title="Please enter check-out time">
+						<label for="checkOut"> Check Out Time <span
+							class="required">*</span>
+						</label> <input type="time" id="checkOut" name="checkOut" min="18:00"
+							max="19:00" required>
 						<div class="help-text">Time you left from work</div>
 					</div>
 
@@ -438,19 +403,20 @@
 
 				<!-- Status Field -->
 				<div class="form-group">
-					<label for="status">
-						Attendance Status <span class="required">*</span>
-					</label>
-					<select id="status" name="status" required title="Please select attendance status">
+					<label for="status"> Attendance Status <span
+						class="required">*</span>
+					</label> <select id="status" name="status" required
+						title="Please select attendance status">
 						<option value="">-- Select Status --</option>
 						<option value="Present">Present</option>
 						<option value="Absent">Absent</option>
 						<option value="Half Day">Half Day</option>
 					</select>
 					<div class="help-text">
-						<span class="status-badge status-present">Present</span> - Full day attendance &nbsp;
-						<span class="status-badge status-absent">Absent</span> - Not present &nbsp;
-						<span class="status-badge status-half-day">Half Day</span> - Partial attendance
+						<span class="status-badge status-present">Present</span> - Full
+						day attendance &nbsp; <span class="status-badge status-absent">Absent</span>
+						- Not present &nbsp; <span class="status-badge status-half-day">Half
+							Day</span> - Partial attendance
 					</div>
 				</div>
 
@@ -464,13 +430,19 @@
 		</div>
 
 		<!-- Back Link -->
-		<a href="attendance.jsp" class="back-link">← Back to Attendance</a>
+		<%
+		String role = (String) session.getAttribute("role");
+		%>
 
+		<a
+			href="<%="admin".equalsIgnoreCase(role) ? "adminDashboardServlet" : "employeeDashboardServlet"%>"
+			class="back-link"> ← Back to Dashboard </a>
 	</div>
 
 	<!-- ===== FOOTER ===== -->
 	<footer>
-		<p>&copy; 2024 ELAMS - Employee Leave & Attendance Management System. All rights reserved.</p>
+		<p>&copy; 2024 ELAMS - Employee Leave & Attendance Management
+			System. All rights reserved.</p>
 	</footer>
 
 	<!-- ===== JAVASCRIPT VALIDATION ===== -->
@@ -532,9 +504,9 @@
 		// Set today's date as default
 		window.addEventListener('load', function() {
 			var today = new Date();
-			var dateString = today.getFullYear() + '-' + 
-							String(today.getMonth() + 1).padStart(2, '0') + '-' + 
-							String(today.getDate()).padStart(2, '0');
+			var dateString = today.getFullYear() + '-'
+					+ String(today.getMonth() + 1).padStart(2, '0') + '-'
+					+ String(today.getDate()).padStart(2, '0');
 			document.getElementById("attendanceDate").value = dateString;
 		});
 

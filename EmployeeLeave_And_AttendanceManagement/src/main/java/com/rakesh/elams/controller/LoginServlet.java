@@ -16,47 +16,57 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-	private UserDao userDao;
+    private UserDao userDao;
 
-	@Override
-	public void init() throws ServletException {
+    @Override
+    public void init() throws ServletException {
+        userDao = new UserDaoImpl();
+    }
 
-		userDao = new UserDaoImpl();
-	}
+    @Override
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
+            throws ServletException, IOException {
 
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
 
-		String email = request.getParameter("email").trim();
+        if (email != null) {
+            email = email.trim();
+        }
 
-		String password = request.getParameter("password").trim();
+        if (password != null) {
+            password = password.trim();
+        }
 
-		User user = userDao.login(email, password);
+        User user = userDao.login(email, password);
 
-		if (user != null) {
+        if (user != null) {
 
-			HttpSession session = request.getSession();
+            HttpSession session = request.getSession(true);
 
-			session.setAttribute("loggedUser", user);
+            // Store logged-in user
+            session.setAttribute("loggedUser", user);
 
-			session.setAttribute("role", user.getRole());
+            // Store role
+            session.setAttribute("role", user.getRole());
 
-			if ("admin".equalsIgnoreCase(user.getRole())) {
+            if ("admin".equalsIgnoreCase(user.getRole())) {
 
-				response.sendRedirect("adminDashboardServlet");
+                response.sendRedirect("adminDashboardServlet");
 
-			} else {
+            } else {
 
-				response.sendRedirect("employeeDashboardServlet");
-			}
+                response.sendRedirect("employeeDashboardServlet");
+            }
 
-		} else {
+        } else {
 
-			request.setAttribute("errorMessage", "Invalid Email or Password");
+            request.setAttribute("errorMessage",
+                    "Invalid Email or Password");
 
-			request.getRequestDispatcher("login.jsp").forward(request, response);
-		}
-	}
-
+            request.getRequestDispatcher("login.jsp")
+                   .forward(request, response);
+        }
+    }
 }
