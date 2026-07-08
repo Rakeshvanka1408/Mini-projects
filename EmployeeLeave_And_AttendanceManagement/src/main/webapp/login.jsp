@@ -412,13 +412,6 @@ input[type="checkbox"] {
 			<form action="register" method="post"
 				onsubmit="return validateRegisterForm()" autocomplete="off">
 
-				<!-- Full Name Field -->
-				<div class="form-group">
-					<label for="fullName">Full Name</label> <input type="text"
-						id="fullName" name="fullName" placeholder="Enter your full name"
-						required autocomplete="name" aria-label="Full Name">
-				</div>
-
 				<!-- Email Field -->
 				<div class="form-group">
 					<label for="registerEmail">Email Address</label> <input
