@@ -26,7 +26,7 @@ public class ManagerViewEmployeesServlet extends HttpServlet {
 
         request.setAttribute("employees", employees);
 
-        request.getRequestDispatcher("managerEmployees.jsp")
+        request.getRequestDispatcher("managerEmployee.jsp")
                .forward(request, response);
     }
 }

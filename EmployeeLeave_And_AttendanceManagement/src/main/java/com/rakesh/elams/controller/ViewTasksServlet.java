@@ -22,7 +22,11 @@ public class ViewTasksServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
+        System.out.println("ViewTasksServlet reached");
+
         List<Task> tasks = dao.getAllTasks();
+
+        System.out.println("Tasks count = " + tasks.size());
 
         request.setAttribute("tasks", tasks);
 

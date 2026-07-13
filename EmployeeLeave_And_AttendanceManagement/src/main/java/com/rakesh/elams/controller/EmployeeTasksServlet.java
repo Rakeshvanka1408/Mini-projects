@@ -9,30 +9,36 @@ import com.rakesh.elams.model.Task;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/EmployeeTasksServlet")
 public class EmployeeTasksServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    TaskDao dao = new TaskDaoImpl();
+	TaskDao dao = new TaskDaoImpl();
 
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-    	HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession(false);
 
-    	int employeeId =
-    	        (Integer) session.getAttribute("employeeId");
-        List<Task> tasks =
-                dao.getTasksByEmployee(employeeId);
+		if (session == null || session.getAttribute("employeeId") == null) {
 
-        request.setAttribute("tasks", tasks);
+			response.sendRedirect("login.jsp");
+			return;
+		}
 
-        request.getRequestDispatcher(
-                "employeeTasks.jsp")
-                .forward(request, response);
-    }
+		int employeeId = (Integer) session.getAttribute("employeeId");
+
+		List<Task> tasks = dao.getTasksByEmployee(employeeId);
+
+		request.setAttribute("tasks", tasks);
+
+		request.getRequestDispatcher("employeeTasks.jsp").forward(request, response);
+	}
 }

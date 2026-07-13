@@ -14,7 +14,9 @@ public class Task {
 	private Date assignedDate;
 	private Date dueDate;
 	private Date completionDate;
+	private String documentPath;
 
+	
 	public Task() {
 	}
 
@@ -123,6 +125,13 @@ public class Task {
 
 	public void setCompletionDate(Date completionDate) {
 		this.completionDate = completionDate;
+	}
+	public String getDocumentPath() {
+	    return documentPath;
+	}
+
+	public void setDocumentPath(String documentPath) {
+	    this.documentPath = documentPath;
 	}
 
 }

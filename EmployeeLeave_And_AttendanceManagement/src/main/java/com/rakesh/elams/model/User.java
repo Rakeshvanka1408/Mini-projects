@@ -5,6 +5,8 @@ public class User {
 	private String email;
 	private String pwd;
 	private String role;
+	private int employeeId;
+	private String name;
 	public User(int id, String email, String pwd, String role) {
 		super();
 		this.id = id;
@@ -13,6 +15,14 @@ public class User {
 		this.role = role;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public User() {
 		// TODO Auto-generated constructor stub
 	}
@@ -48,7 +58,13 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	public int getEmployeeId() {
+	    return employeeId;
+	}
 
+	public void setEmployeeId(int employeeId) {
+	    this.employeeId = employeeId;
+	}
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", pwd=" + pwd + ", role=" + role + "]";

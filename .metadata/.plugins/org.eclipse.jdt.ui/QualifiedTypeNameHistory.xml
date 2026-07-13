@@ -14,6 +14,6 @@
     <fullyQualifiedTypeName name="java.sql.Connection"/>
     <fullyQualifiedTypeName name="java.sql.DriverManager"/>
     <fullyQualifiedTypeName name="com.sun.org.apache.xalan.internal.xsltc.dom.Filter"/>
-    <fullyQualifiedTypeName name="jakarta.servlet.Filter"/>
     <fullyQualifiedTypeName name="com.rakesh.elams.model.Task.Status"/>
+    <fullyQualifiedTypeName name="jakarta.servlet.Filter"/>
 </qualifiedTypeNameHistroy>

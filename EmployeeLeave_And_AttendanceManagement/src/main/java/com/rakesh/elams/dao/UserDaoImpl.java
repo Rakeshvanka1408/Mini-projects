@@ -46,18 +46,24 @@ public class UserDaoImpl implements UserDao {
         return false;
     }
 
+    
     @Override
     public User login(String email, String password) {
 
         User user = null;
 
-        String sql = "SELECT * FROM user WHERE email=?";
+        String sql =
+                "SELECT u.*, e.employee_id " +
+                "FROM user u " +
+                "LEFT JOIN employees e ON u.email = e.email " +
+                "WHERE u.email=?";
 
         try {
 
             Connection connection = DbUtil.getConnection();
 
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement ps =
+                    connection.prepareStatement(sql);
 
             ps.setString(1, email);
 
@@ -65,9 +71,12 @@ public class UserDaoImpl implements UserDao {
 
             if (rs.next()) {
 
-                String hashedPassword = rs.getString("password");
+                String hashedPassword =
+                        rs.getString("password");
 
-                if (PasswordUtil.checkPassword(password, hashedPassword)) {
+                if (PasswordUtil.checkPassword(
+                        password,
+                        hashedPassword)) {
 
                     user = new User();
 
@@ -76,19 +85,19 @@ public class UserDaoImpl implements UserDao {
                     user.setPwd(hashedPassword);
                     user.setRole(rs.getString("role"));
 
+                    // Employee ID from employees table
+                    user.setEmployeeId(
+                            rs.getInt("employee_id"));
                 }
-
             }
 
         } catch (Exception e) {
 
             e.printStackTrace();
-
         }
 
         return user;
     }
-
     @Override
     public List<User> getAllUsers() {
 

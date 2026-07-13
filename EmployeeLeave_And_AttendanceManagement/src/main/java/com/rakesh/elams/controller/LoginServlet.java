@@ -40,33 +40,37 @@ public class LoginServlet extends HttpServlet {
         }
 
         User user = userDao.login(email, password);
+
         if (user != null) {
 
-            HttpSession session = request.getSession();
+            HttpSession session = request.getSession(true);
+
+            // Set all session attributes
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
+            session.setAttribute("employeeId", user.getEmployeeId());
+            session.setAttribute("role", user.getRole());
+            session.setAttribute("managerName", user.getName());
+            session.setAttribute("username", user.getName()); // Also set username
+            
+            // Set session timeout to 30 minutes
+            session.setMaxInactiveInterval(30 * 60);
+            
+            System.out.println("Session set - managerName: " + user.getName());
+            System.out.println("Session ID: " + session.getId());
 
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
-
                 response.sendRedirect("adminDashboard.jsp");
-
             } else if ("MANAGER".equalsIgnoreCase(user.getRole())) {
-
                 response.sendRedirect("managerDashboard.jsp");
-
             } else if ("EMPLOYEE".equalsIgnoreCase(user.getRole())) {
-
                 response.sendRedirect("employeeDashboard.jsp");
-
             } else {
-
                 response.sendRedirect("login.jsp?error=Invalid Role");
             }
 
         } else {
-
             response.sendRedirect("login.jsp?error=Invalid Username or Password");
-
         }
     }
 }

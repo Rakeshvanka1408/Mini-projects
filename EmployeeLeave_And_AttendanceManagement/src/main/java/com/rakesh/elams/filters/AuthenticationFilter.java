@@ -20,12 +20,14 @@ public class AuthenticationFilter implements Filter {
 			throws IOException, ServletException {
 
 		HttpServletRequest req = (HttpServletRequest) request;
-
 		HttpServletResponse res = (HttpServletResponse) response;
 
 		String uri = req.getRequestURI();
 
-		if (uri.endsWith("login.jsp") || uri.endsWith("login") || uri.contains("css") || uri.contains("js")) {
+		// Public resources
+		if (uri.endsWith("login.jsp") || uri.endsWith("/login") || uri.endsWith("register.jsp") || uri.contains("/css/")
+				|| uri.contains("/js/") || uri.contains("/images/") || uri.endsWith(".css") || uri.endsWith(".js")
+				|| uri.endsWith(".png") || uri.endsWith(".jpg") || uri.endsWith(".jpeg") || uri.endsWith("/")) {
 
 			chain.doFilter(request, response);
 			return;
@@ -33,14 +35,21 @@ public class AuthenticationFilter implements Filter {
 
 		HttpSession session = req.getSession(false);
 
-		if (session == null) {
+		System.out.println("URI = " + uri);
+		System.out.println("Session = " + session);
 
+		if (session != null) {
+			System.out.println("Session ID = " + session.getId());
+			System.out.println("User = " + session.getAttribute("user"));
+			System.out.println("Role = " + session.getAttribute("role"));
+			System.out.println("Employee ID = " + session.getAttribute("employeeId"));
+		}
+
+		if (session == null || session.getAttribute("user") == null) {
 			res.sendRedirect(req.getContextPath() + "/login.jsp");
-
 			return;
 		}
 
 		chain.doFilter(request, response);
 	}
-
 }

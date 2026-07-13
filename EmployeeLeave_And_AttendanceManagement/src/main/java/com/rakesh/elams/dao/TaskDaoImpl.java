@@ -24,8 +24,9 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public boolean createTask(Task task) {
 
-		String sql = "INSERT INTO tasks VALUES(?,?,?,?,?,?,?,?,?,?)";
-
+		String sql = "INSERT INTO tasks " + "(task_id, task_name, description, employee_id, manager_id, "
+				+ "priority, status, assigned_date, due_date, completion_date,document_path) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setString(1, task.getTaskId());
@@ -38,6 +39,7 @@ public class TaskDaoImpl implements TaskDao {
 			ps.setDate(8, task.getAssignedDate());
 			ps.setDate(9, task.getDueDate());
 			ps.setDate(10, task.getCompletionDate());
+			ps.setString(11, task.getDocumentPath());
 
 			return ps.executeUpdate() > 0;
 
@@ -223,6 +225,9 @@ public class TaskDaoImpl implements TaskDao {
 		task.setDueDate(rs.getDate("due_date"));
 
 		task.setCompletionDate(rs.getDate("completion_date"));
+
+		// ADD THIS LINE
+		task.setDocumentPath(rs.getString("document_path"));
 
 		return task;
 	}

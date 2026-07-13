@@ -125,6 +125,9 @@ body {
 .menu-card.attendance-history {
 	border-left: 5px solid #1abc9c;
 }
+.menu-card.tasks {
+    border-left: 5px solid #8e44ad;
+}
 
 /* Card Icon */
 .menu-card .icon {
@@ -244,43 +247,54 @@ footer {
 
 		<!-- ===== MENU CARDS SECTION ===== -->
 		<div class="menu-cards">
-			<li><a
-				href="EmployeeTasksServlet?employeeId=${sessionScope.employee.employeeId}">
-					My Tasks </a></li>
-			<!-- CARD 1: Mark Attendance -->
+
+			<!-- CARD 1: My Tasks -->
+			<a
+				href="EmployeeTasksServlet?employeeId=${sessionScope.employee.employeeId}"
+				class="menu-card tasks"> <span class="icon">✅</span>
+				<h3>My Tasks</h3>
+				<p class="description">View your assigned tasks and update task
+					status</p>
+			</a>
+
+			<!-- CARD 2: Mark Attendance -->
 			<a href="attendance.jsp" class="menu-card attendance"> <span
 				class="icon">📋</span>
 				<h3>Mark Attendance</h3>
 				<p class="description">Record your daily attendance status</p>
 			</a>
 
-			<!-- CARD 2: Apply Leave -->
+			<!-- CARD 3: Apply Leave -->
 			<a href="applyLeave.jsp" class="menu-card leave-apply"> <span
 				class="icon">📝</span>
 				<h3>Apply Leave</h3>
-				<p class="description">Submit a leave request for your time off</p>
+				<p class="description">Submit a leave request for your time off
+				</p>
 			</a>
 
-			<!-- CARD 3: Leave History -->
+			<!-- CARD 4: Leave History -->
 			<a href="leaveHistory?employeeId=1" class="menu-card leave-history">
 				<span class="icon">📅</span>
 				<h3>Leave History</h3>
 				<p class="description">View all your leave requests and status</p>
 			</a>
 
-			<!-- CARD 4: Attendance History -->
+			<!-- CARD 5: Attendance History -->
 			<a href="attendanceHistory?employeeId=1"
 				class="menu-card attendance-history"> <span class="icon">📊</span>
 				<h3>Attendance History</h3>
 				<p class="description">Check your monthly attendance records</p>
 			</a>
 
-			<!-- CARD 5: Logout -->
+			<!-- CARD 6: Logout -->
 			<a href="logout" class="menu-card logout"
 				onclick="return confirm('Are you sure you want to logout?');"> <span
 				class="icon">🚪</span>
+
 				<h3>Logout</h3>
+
 				<p class="description">Sign out from your account</p>
+
 			</a>
 
 		</div>
