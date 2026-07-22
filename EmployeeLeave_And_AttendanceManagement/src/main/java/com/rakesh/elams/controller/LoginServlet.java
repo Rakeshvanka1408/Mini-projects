@@ -49,8 +49,11 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
             session.setAttribute("employeeId", user.getEmployeeId());
+            session.setAttribute("email",email);
             session.setAttribute("role", user.getRole());
             session.setAttribute("managerName", user.getName());
+            //System.out.println("User Name from DB = " + user.getName());
+            session.setAttribute("employeeName", user.getName());
             session.setAttribute("username", user.getName()); // Also set username
             
             // Set session timeout to 30 minutes

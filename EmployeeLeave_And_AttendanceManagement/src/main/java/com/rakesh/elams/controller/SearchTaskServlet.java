@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/SearchTaskServlet")
 public class SearchTaskServlet extends HttpServlet {
@@ -22,6 +23,27 @@ public class SearchTaskServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		// Bug fix: this servlet had no session/role check at all, and never
+		// scoped the search to the logged-in manager, so anyone could search
+		// across every manager's tasks.
+		HttpSession session = request.getSession(false);
+		String role = (session != null) ? (String) session.getAttribute("role") : null;
+
+		if (role == null || !"MANAGER".equalsIgnoreCase(role)) {
+			response.sendRedirect("login.jsp");
+			return;
+		}
+
+		Integer managerId = (Integer) session.getAttribute("employeeId");
+
+		if (managerId == null) {
+			// No manager identity on the session — fail safe with an empty list
+			// rather than falling through to an unscoped search.
+			request.setAttribute("tasks", List.of());
+			request.getRequestDispatcher("viewTasks.jsp").forward(request, response);
+			return;
+		}
 
 		String taskId = request.getParameter("taskId");
 
@@ -37,7 +59,7 @@ public class SearchTaskServlet extends HttpServlet {
 
 		String priority = request.getParameter("priority");
 
-		List<Task> tasks = dao.searchTasks(taskId, employeeId, status, priority);
+		List<Task> tasks = dao.searchTasks(managerId, taskId, employeeId, status, priority);
 
 		request.setAttribute("tasks", tasks);
 

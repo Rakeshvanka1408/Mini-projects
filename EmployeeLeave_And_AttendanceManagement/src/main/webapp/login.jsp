@@ -1,689 +1,1384 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
+
+<%
+/*
+ * ============================================
+ * CHECK IF USER IS ALREADY LOGGED IN
+ * ============================================
+ */
+
+String role = (String) session.getAttribute("role");
+
+if (role != null) {
+
+    if ("ADMIN".equalsIgnoreCase(role)) {
+
+        response.sendRedirect("adminHome.jsp");
+        return;
+
+    } else if ("MANAGER".equalsIgnoreCase(role)) {
+
+        response.sendRedirect("managerHome.jsp");
+        return;
+
+    } else if ("EMPLOYEE".equalsIgnoreCase(role)) {
+
+        response.sendRedirect("employeeHome.jsp");
+        return;
+    }
+}
+
+
+/*
+ * ============================================
+ * READ LOGIN ERROR MESSAGE
+ * ============================================
+ */
+
+String loginError =
+        (String) session.getAttribute("loginError");
+
+if (loginError != null) {
+
+    session.removeAttribute("loginError");
+}
+
+
+/*
+ * ============================================
+ * READ LOGOUT MESSAGE
+ * ============================================
+ */
+
+String logoutMessage =
+        (String) session.getAttribute("logoutMessage");
+
+if (logoutMessage != null) {
+
+    session.removeAttribute("logoutMessage");
+}
+
+
+/*
+ * ============================================
+ * READ REGISTRATION SUCCESS MESSAGE
+ * ============================================
+ */
+
+String registerSuccess =
+        (String) session.getAttribute("registerSuccess");
+
+if (registerSuccess != null) {
+
+    session.removeAttribute("registerSuccess");
+}
+
+%>
+
 
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ELAMS Login - Employee Leave & Attendance Management
-	System</title>
+
+<meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+<title>ELAMS Login</title>
+
+
+<!-- =========================================
+     GOOGLE FONT
+========================================= -->
+
+<link rel="preconnect"
+    href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+
+<!-- =========================================
+     FONT AWESOME
+========================================= -->
+
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 
 <style>
+
+/* =========================================
+   RESET
+========================================= */
+
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+    font-family: 'Poppins', sans-serif;
+
 }
+
+
+/* =========================================
+   BODY
+========================================= */
 
 body {
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-	min-height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 20px;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #f8fafc
+        );
+
+    padding: 20px;
+
 }
+
+
+/* =========================================
+   MAIN LOGIN CONTAINER
+========================================= */
 
 .login-container {
-	width: 100%;
-	max-width: 430px;
-	padding: 45px 40px;
-	border-radius: 20px;
-	background: rgba(255, 255, 255, 0.95);
-	backdrop-filter: blur(15px);
-	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-	animation: fadeIn 0.6s ease;
+
+    width: 100%;
+
+    max-width: 1050px;
+
+    min-height: 620px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    background: white;
+
+    border-radius: 22px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 50px
+        rgba(15, 23, 42, 0.12);
+
 }
 
-@
-keyframes fadeIn {from { opacity:0;
-	transform: translateY(-25px) scale(0.96);
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.login-left {
+
+    position: relative;
+
+    padding: 55px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #0ea5e9
+        );
+
+    color: white;
+
+    overflow: hidden;
+
 }
 
-to {
-	opacity: 1;
-	transform: translateY(0) scale(1);
-}
+
+/* Decorative Circle - Top Right */
+
+.login-left::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 300px;
+
+    height: 300px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    top: -100px;
+
+    right: -100px;
 
 }
-.logo-section {
-	text-align: center;
-	margin-bottom: 30px;
+
+
+/* Decorative Circle - Bottom Left */
+
+.login-left::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 250px;
+
+    height: 250px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    bottom: -100px;
+
+    left: -80px;
+
 }
 
-.logo-section h1 {
-	color: #0f4c81;
-	font-size: 42px;
-	font-weight: 800;
-	letter-spacing: 2px;
+
+/* =========================================
+   BRAND
+========================================= */
+
+.brand {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 45px;
+
 }
 
-.logo-section p {
-	color: #666;
-	font-size: 13px;
-	margin-top: 8px;
-	letter-spacing: 1px;
+
+.brand-icon {
+
+    width: 52px;
+
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background:
+        rgba(255, 255, 255, 0.18);
+
+    font-size: 23px;
+
 }
 
-.divider {
-	height: 2px;
-	background: linear-gradient(to right, transparent, #00b4d8, transparent);
-	margin: 25px 0;
+
+.brand h1 {
+
+    font-size: 24px;
+
+    font-weight: 700;
+
 }
 
-.form-group {
-	margin-bottom: 22px;
+
+.brand p {
+
+    font-size: 11px;
+
+    opacity: 0.85;
+
+    margin-top: 2px;
+
 }
 
-label {
-	display: block;
-	margin-bottom: 8px;
-	font-size: 13px;
-	font-weight: 700;
-	color: #2d3436;
-	text-transform: uppercase;
+
+/* =========================================
+   LEFT CONTENT
+========================================= */
+
+.login-left-content {
+
+    position: relative;
+
+    z-index: 2;
+
 }
 
-input[type="email"], input[type="password"], input[type="text"] {
-	width: 100%;
-	padding: 15px 18px;
-	border: 2px solid #dfe6e9;
-	border-radius: 12px;
-	font-size: 14px;
-	background: #f8fafc;
-	transition: all .3s ease;
+
+.login-left h2 {
+
+    font-size: 34px;
+
+    line-height: 1.3;
+
+    font-weight: 600;
+
+    margin-bottom: 18px;
+
 }
 
-input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus
-	{
-	outline: none;
-	border-color: #00b4d8;
-	background: white;
-	box-shadow: 0 0 0 5px rgba(0, 180, 216, 0.15);
+
+.login-left-content > p {
+
+    font-size: 14px;
+
+    line-height: 1.8;
+
+    opacity: 0.9;
+
+    max-width: 420px;
+
 }
 
-.password-container {
-	position: relative;
+
+/* =========================================
+   FEATURES
+========================================= */
+
+.features {
+
+    margin-top: 35px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+
 }
 
-.toggle-password {
-	position: absolute;
-	right: 15px;
-	top: 50%;
-	transform: translateY(-50%);
-	border: none;
-	background: none;
-	cursor: pointer;
-	font-size: 18px;
-	color: #777;
+
+.feature {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-size: 13px;
+
 }
 
-.toggle-password:hover {
-	color: #00b4d8;
+
+.feature-icon {
+
+    width: 32px;
+
+    height: 32px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(255, 255, 255, 0.15);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 13px;
+
 }
+
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.login-right {
+
+    padding: 45px 55px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.login-form-container {
+
+    width: 100%;
+
+    max-width: 390px;
+
+}
+
+
+/* =========================================
+   LOGIN HEADER
+========================================= */
+
+.login-header {
+
+    margin-bottom: 25px;
+
+}
+
+
+.login-header h2 {
+
+    font-size: 27px;
+
+    color: #111827;
+
+    font-weight: 600;
+
+    margin-bottom: 7px;
+
+}
+
+
+.login-header p {
+
+    color: #64748b;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================
+   ALERT MESSAGES
+========================================= */
 
 .alert {
-	padding: 14px;
-	border-radius: 10px;
-	margin-bottom: 20px;
-	font-size: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 14px;
+
+    border-radius: 9px;
+
+    margin-bottom: 18px;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
 }
+
 
 .alert-error {
-	background: #ffe5e5;
-	color: #d63031;
-	border-left: 5px solid #d63031;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+
+    border:
+        1px solid #fecaca;
+
 }
+
 
 .alert-success {
-	background: #e8fff0;
-	color: #27ae60;
-	border-left: 5px solid #27ae60;
+
+    background: #ecfdf5;
+
+    color: #047857;
+
+    border:
+        1px solid #a7f3d0;
+
 }
 
-.remember-section {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 25px;
-	font-size: 13px;
+
+/* =========================================
+   FORM GROUP
+========================================= */
+
+.form-group {
+
+    margin-bottom: 20px;
+
 }
 
-.checkbox-wrapper {
-	display: flex;
-	align-items: center;
+
+.form-group label {
+
+    display: block;
+
+    color: #374151;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+
 }
 
-input[type="checkbox"] {
-	margin-right: 6px;
-	width: 17px;
-	height: 17px;
-	accent-color: #00b4d8;
+
+/* =========================================
+   INPUT WRAPPER
+========================================= */
+
+.input-wrapper {
+
+    position: relative;
+
 }
 
-.checkbox-wrapper label {
-	text-transform: none;
-	font-weight: 500;
-	margin: 0;
+
+.input-wrapper > i {
+
+    position: absolute;
+
+    left: 15px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    color: #94a3b8;
+
+    font-size: 14px;
+
+    pointer-events: none;
+
 }
 
-.forgot-password {
-	color: #0077b6;
-	text-decoration: none;
-	font-weight: 600;
+
+/* =========================================
+   INPUT
+========================================= */
+
+.form-control {
+
+    width: 100%;
+
+    height: 48px;
+
+    border:
+        1px solid #dbe3ec;
+
+    border-radius: 10px;
+
+    padding:
+        0 45px 0 42px;
+
+    background: #f8fafc;
+
+    color: #1e293b;
+
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        all 0.2s ease;
+
 }
 
-.forgot-password:hover {
-	text-decoration: underline;
+
+.form-control:focus {
+
+    background: white;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37, 99, 235, 0.08);
+
 }
 
-.login-btn, .register-btn {
-	width: 100%;
-	padding: 15px;
-	border: none;
-	border-radius: 12px;
-	background: linear-gradient(135deg, #00b4d8, #0077b6);
-	color: white;
-	font-size: 15px;
-	font-weight: 700;
-	cursor: pointer;
-	transition: all .3s ease;
-	box-shadow: 0 8px 20px rgba(0, 119, 182, 0.35);
+
+/* =========================================
+   PASSWORD TOGGLE
+========================================= */
+
+.password-toggle {
+
+    position: absolute;
+
+    right: 15px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    border: none;
+
+    background: none;
+
+    color: #94a3b8;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
 }
 
-.login-btn:hover, .register-btn:hover {
-	transform: translateY(-3px);
-	box-shadow: 0 12px 25px rgba(0, 119, 182, 0.45);
+
+.password-toggle:hover {
+
+    color: #2563eb;
+
 }
 
-.login-btn:active, .register-btn:active {
-	transform: translateY(0);
+
+/* =========================================
+   LOGIN BUTTON
+========================================= */
+
+.login-btn {
+
+    width: 100%;
+
+    height: 48px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        );
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin-top: 8px;
+
+    box-shadow:
+        0 7px 16px
+        rgba(37, 99, 235, 0.18);
+
+    transition:
+        all 0.25s ease;
+
 }
 
-.signup-section {
-	margin-top: 25px;
-	padding-top: 20px;
-	text-align: center;
-	border-top: 1px solid #ecf0f1;
-	color: #636e72;
-	font-size: 13px;
+
+.login-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 10px 22px
+        rgba(37, 99, 235, 0.25);
+
 }
 
-.signup-section a {
-	color: #0077b6;
-	font-weight: 700;
-	text-decoration: none;
+
+.login-btn:active {
+
+    transform:
+        translateY(0);
+
 }
 
-.signup-section a:hover {
-	text-decoration: underline;
+
+/* =========================================
+   REGISTER / CREATE ACCOUNT
+========================================= */
+
+.login-footer {
+
+    margin-top: 25px;
+
+    text-align: center;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    line-height: 1.7;
+
 }
 
-.security-notice {
-	margin-top: 18px;
-	text-align: center;
-	font-size: 11px;
-	color: #7f8c8d;
+
+.login-footer p {
+
+    margin-bottom: 8px;
+
 }
 
-.form-container {
-	display: none;
+
+.login-footer a {
+
+    color: #2563eb;
+
+    text-decoration: none;
+
+    font-weight: 600;
+
 }
 
-.form-container.active {
-	display: block;
+
+.login-footer a:hover {
+
+    text-decoration: underline;
+
 }
 
-.password-strength {
-	margin-top: 8px;
-	padding: 8px;
-	border-radius: 8px;
-	font-size: 12px;
-	font-weight: 600;
+
+/* =========================================
+   SECURITY INFO
+========================================= */
+
+.security-info {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 15px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
 }
 
-.password-strength.weak {
-	background: #ffe5e5;
-	color: #d63031;
+
+.security-info i {
+
+    color: #22c55e;
+
 }
 
-.password-strength.medium {
-	background: #fff4d6;
-	color: #e67e22;
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 850px) {
+
+    .login-container {
+
+        grid-template-columns: 1fr;
+
+        max-width: 500px;
+
+    }
+
+
+    .login-left {
+
+        padding: 35px;
+
+        min-height: 330px;
+
+    }
+
+
+    .login-left h2 {
+
+        font-size: 27px;
+
+    }
+
+
+    .features {
+
+        display: none;
+
+    }
+
+
+    .brand {
+
+        margin-bottom: 25px;
+
+    }
+
+
+    .login-right {
+
+        padding: 40px 30px;
+
+    }
+
 }
 
-.password-strength.strong {
-	background: #e8fff0;
-	color: #27ae60;
+
+@media (max-width: 500px) {
+
+    body {
+
+        padding: 12px;
+
+    }
+
+
+    .login-left {
+
+        padding: 30px 25px;
+
+    }
+
+
+    .login-right {
+
+        padding: 35px 22px;
+
+    }
+
+
+    .login-left h2 {
+
+        font-size: 24px;
+
+    }
+
+
+    .login-header h2 {
+
+        font-size: 23px;
+
+    }
+
 }
 
-@media ( max-width :480px) {
-	.login-container {
-		padding: 30px 25px;
-	}
-	.logo-section h1 {
-		font-size: 34px;
-	}
-	.remember-section {
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 10px;
-	}
-}
 </style>
 
 </head>
 
+
 <body>
 
-	<div class="login-container">
-		<!-- Logo Section -->
-		<div class="logo-section">
-			<h1>ELAMS</h1>
-			<p>Employee Leave & Attendance Management System</p>
-		</div>
 
-		<div class="divider"></div>
+<!-- =========================================
+     MAIN LOGIN CONTAINER
+========================================= -->
 
-		<!-- Error Message Display -->
-		<%
-		String error = (String) request.getAttribute("errorMessage");
-		String success = (String) request.getAttribute("successMessage");
+<div class="login-container">
 
-		if (error != null && !error.isEmpty()) {
-		%>
-		<div class="alert alert-error">
-			<%=error%>
-		</div>
-		<%
-		}
 
-		if (success != null && !success.isEmpty()) {
-		%>
-		<div class="alert alert-success">
-			<%=success%>
-		</div>
-		<%
-		}
-		%>
+    <!-- =====================================
+         LEFT SIDE
+    ====================================== -->
 
-		<!-- Login Form -->
-		<div id="loginForm" class="form-container active">
-			<form action="login" method="post"
-				onsubmit="return validateLoginForm()" autocomplete="off">
+    <div class="login-left">
 
-				<!-- Email Field -->
-				<div class="form-group">
-					<label for="loginEmail">Email Address</label> <input type="email"
-						id="loginEmail" name="email" placeholder="Enter your email"
-						required autocomplete="email" aria-label="Email Address">
-				</div>
 
-				<!-- Password Field -->
-				<div class="form-group">
-					<label for="loginPassword">Password</label>
-					<div class="password-container">
-						<input type="password" id="loginPassword" name="password"
-							placeholder="Enter your password" required
-							autocomplete="current-password" aria-label="Password">
-						<button type="button" class="toggle-password"
-							id="toggleLoginPassword" aria-label="Toggle password visibility">👁️</button>
-					</div>
-				</div>
+        <!-- BRAND -->
 
-				<!-- Remember Me & Forgot Password -->
-				<div class="remember-section">
-					<div class="checkbox-wrapper">
-						<input type="checkbox" id="rememberMe" name="rememberMe">
-						<label for="rememberMe">Remember me</label>
-					</div>
-					<a href="forgotPassword.jsp" class="forgot-password">Forgot
-						Password?</a>
-				</div>
+        <div class="brand">
 
-				<!-- Login Button -->
-				<button type="submit" class="login-btn" id="loginBtn">Login</button>
 
-			</form>
+            <div class="brand-icon">
 
-			<!-- Signup Link -->
-			<div class="signup-section">
-				Don't have an account? <a class="toggle-form-btn"
-					onclick="toggleForms()">Sign Up</a>
-			</div>
-		</div>
+                <i class="fa-solid fa-users-gear"></i>
 
-		<!-- Registration Form -->
-		<div id="registerForm" class="form-container">
-			<form action="register" method="post"
-				onsubmit="return validateRegisterForm()" autocomplete="off">
+            </div>
 
-				<!-- Email Field -->
-				<div class="form-group">
-					<label for="registerEmail">Email Address</label> <input
-						type="email" id="registerEmail" name="email"
-						placeholder="Enter your email" required autocomplete="email"
-						aria-label="Email Address">
-				</div>
 
-				<!-- Password Field -->
-				<div class="form-group">
-					<label for="registerPassword">Password</label>
-					<div class="password-container">
-						<input type="password" id="registerPassword" name="password"
-							placeholder="Enter a strong password" required
-							autocomplete="new-password" aria-label="Password"
-							onchange="checkPasswordStrength()">
-						<button type="button" class="toggle-password"
-							id="toggleRegisterPassword"
-							aria-label="Toggle password visibility">👁️</button>
-					</div>
-					<div id="passwordStrength"></div>
-				</div>
+            <div>
 
-				<!-- Confirm Password Field -->
-				<div class="form-group">
-					<label for="confirmPassword">Confirm Password</label>
-					<div class="password-container">
-						<input type="password" id="confirmPassword" name="confirmPassword"
-							placeholder="Confirm your password" required
-							autocomplete="new-password" aria-label="Confirm Password">
-						<button type="button" class="toggle-password"
-							id="toggleConfirmPassword"
-							aria-label="Toggle password visibility">👁️</button>
-					</div>
-				</div>
+                <h1>ELAMS</h1>
 
-				<!-- Register Button -->
-				<button type="submit" class="register-btn" id="registerBtn">Sign
-					Up</button>
+                <p>
+                    Employee Leave & Attendance
+                    Management System
+                </p>
 
-			</form>
+            </div>
 
-			<!-- Login Link -->
-			<div class="signup-section">
-				Already have an account? <a class="toggle-form-btn"
-					onclick="toggleForms()">Login</a>
-			</div>
-		</div>
 
-		<!-- Security Notice -->
-		<div class="security-notice">🔒 Your login information is secure
-			and encrypted</div>
-	</div>
+        </div>
 
-	<script>
-		// Toggle between Login and Register forms
-		function toggleForms() {
-			document.getElementById('loginForm').classList.toggle('active');
-			document.getElementById('registerForm').classList.toggle('active');
-		}
 
-		// Toggle Password Visibility - Login Form
-		const toggleLoginPassword = document
-				.getElementById('toggleLoginPassword');
-		const loginPasswordInput = document.getElementById('loginPassword');
+        <!-- LEFT CONTENT -->
 
-		toggleLoginPassword
-				.addEventListener(
-						'click',
-						function(e) {
-							e.preventDefault();
-							const type = loginPasswordInput
-									.getAttribute('type') === 'password' ? 'text'
-									: 'password';
-							loginPasswordInput.setAttribute('type', type);
-							toggleLoginPassword.textContent = type === 'password' ? '👁️'
-									: '👁️‍🗨️';
-						});
+        <div class="login-left-content">
 
-		// Toggle Password Visibility - Register Form
-		const toggleRegisterPassword = document
-				.getElementById('toggleRegisterPassword');
-		const registerPasswordInput = document
-				.getElementById('registerPassword');
 
-		toggleRegisterPassword
-				.addEventListener(
-						'click',
-						function(e) {
-							e.preventDefault();
-							const type = registerPasswordInput
-									.getAttribute('type') === 'password' ? 'text'
-									: 'password';
-							registerPasswordInput.setAttribute('type', type);
-							toggleRegisterPassword.textContent = type === 'password' ? '👁️'
-									: '👁️‍🗨️';
-						});
+            <h2>
+                Welcome Back!
+            </h2>
 
-		// Toggle Password Visibility - Confirm Password
-		const toggleConfirmPassword = document
-				.getElementById('toggleConfirmPassword');
-		const confirmPasswordInput = document.getElementById('confirmPassword');
 
-		toggleConfirmPassword
-				.addEventListener(
-						'click',
-						function(e) {
-							e.preventDefault();
-							const type = confirmPasswordInput
-									.getAttribute('type') === 'password' ? 'text'
-									: 'password';
-							confirmPasswordInput.setAttribute('type', type);
-							toggleConfirmPassword.textContent = type === 'password' ? '👁️'
-									: '👁️‍🗨️';
-						});
+            <p>
 
-		// Password Strength Checker
-		function checkPasswordStrength() {
-			const password = document.getElementById('registerPassword').value;
-			const strengthDisplay = document.getElementById('passwordStrength');
+                Sign in to access your ELAMS account
+                and manage employee activities,
+                attendance, leave requests and tasks.
 
-			let strength = 'weak';
-			let message = 'Weak';
+            </p>
 
-			// Password strength criteria
-			const hasUpperCase = /[A-Z]/.test(password);
-			const hasLowerCase = /[a-z]/.test(password);
-			const hasNumbers = /\d/.test(password);
-			const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
-					.test(password);
-			const isLengthValid = password.length >= 8;
 
-			const strengthCount = [ hasUpperCase, hasLowerCase, hasNumbers,
-					hasSpecialChar, isLengthValid ].filter(Boolean).length;
+            <!-- FEATURES -->
 
-			if (strengthCount >= 4) {
-				strength = 'strong';
-				message = 'Strong ✓';
-			} else if (strengthCount >= 3) {
-				strength = 'medium';
-				message = 'Medium';
-			}
+            <div class="features">
 
-			strengthDisplay.className = 'password-strength ' + strength;
-			strengthDisplay.textContent = message;
-		}
 
-		// Login Form Validation
-		function validateLoginForm() {
-			const email = document.getElementById('loginEmail').value.trim();
-			const password = document.getElementById('loginPassword').value;
+                <!-- FEATURE 1 -->
 
-			// Validate email
-			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailRegex.test(email)) {
-				alert('Please enter a valid email address');
-				document.getElementById('loginEmail').focus();
-				return false;
-			}
+                <div class="feature">
 
-			// Validate password
-			if (password.length < 6) {
-				alert('Password must be at least 6 characters');
-				document.getElementById('loginPassword').focus();
-				return false;
-			}
 
-			// Add loading state
-			const loginBtn = document.getElementById('loginBtn');
-			loginBtn.classList.add('loading');
-			loginBtn.disabled = true;
+                    <div class="feature-icon">
 
-			return true;
-		}
+                        <i class="fa-solid fa-calendar-check"></i>
 
-		// Register Form Validation
-		function validateRegisterForm() {
-			const fullName = document.getElementById('fullName').value.trim();
-			const email = document.getElementById('registerEmail').value.trim();
-			const password = document.getElementById('registerPassword').value;
-			const confirmPassword = document.getElementById('confirmPassword').value;
+                    </div>
 
-			// Validate full name
-			if (fullName.length < 3) {
-				alert('Full name must be at least 3 characters long');
-				document.getElementById('fullName').focus();
-				return false;
-			}
 
-			// Validate email
-			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailRegex.test(email)) {
-				alert('Please enter a valid email address');
-				document.getElementById('registerEmail').focus();
-				return false;
-			}
+                    <span>
 
-			// Validate password strength
-			if (password.length < 8) {
-				alert('Password must be at least 8 characters long');
-				document.getElementById('registerPassword').focus();
-				return false;
-			}
+                        Manage attendance and leave
 
-			const hasUpperCase = /[A-Z]/.test(password);
-			const hasLowerCase = /[a-z]/.test(password);
-			const hasNumbers = /\d/.test(password);
-			const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
-					.test(password);
+                    </span>
 
-			if (!hasUpperCase || !hasLowerCase || !hasNumbers
-					|| !hasSpecialChar) {
-				alert('Password must contain uppercase, lowercase, numbers, and special characters');
-				document.getElementById('registerPassword').focus();
-				return false;
-			}
 
-			// Validate password confirmation
-			if (password !== confirmPassword) {
-				alert('Passwords do not match');
-				document.getElementById('confirmPassword').focus();
-				return false;
-			}
+                </div>
 
-			// Add loading state
-			const registerBtn = document.getElementById('registerBtn');
-			registerBtn.classList.add('loading');
-			registerBtn.disabled = true;
 
-			return true;
-		}
+                <!-- FEATURE 2 -->
 
-		// Real-time email validation
-		document.getElementById('loginEmail').addEventListener('blur',
-				function() {
-					const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-					if (this.value && !emailRegex.test(this.value)) {
-						this.style.borderColor = '#e74c3c';
-					} else {
-						this.style.borderColor = '#ecf0f1';
-					}
-				});
+                <div class="feature">
 
-		document.getElementById('registerEmail').addEventListener('blur',
-				function() {
-					const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-					if (this.value && !emailRegex.test(this.value)) {
-						this.style.borderColor = '#e74c3c';
-					} else {
-						this.style.borderColor = '#ecf0f1';
-					}
-				});
 
-		// Focus styles
-		document.getElementById('loginEmail').addEventListener('focus',
-				function() {
-					this.style.borderColor = '#667eea';
-				});
+                    <div class="feature-icon">
 
-		document.getElementById('loginPassword').addEventListener('focus',
-				function() {
-					this.style.borderColor = '#667eea';
-				});
+                        <i class="fa-solid fa-list-check"></i>
 
-		document.getElementById('registerEmail').addEventListener('focus',
-				function() {
-					this.style.borderColor = '#667eea';
-				});
+                    </div>
 
-		document.getElementById('registerPassword').addEventListener('focus',
-				function() {
-					this.style.borderColor = '#667eea';
-				});
 
-		document.getElementById('confirmPassword').addEventListener('focus',
-				function() {
-					this.style.borderColor = '#667eea';
-				});
+                    <span>
 
-		// Prevent form submission on Enter key in toggle buttons
-		document.getElementById('toggleLoginPassword').addEventListener(
-				'keydown', function(e) {
-					if (e.key === 'Enter') {
-						e.preventDefault();
-					}
-				});
+                        Track and manage assigned tasks
 
-		document.getElementById('toggleRegisterPassword').addEventListener(
-				'keydown', function(e) {
-					if (e.key === 'Enter') {
-						e.preventDefault();
-					}
-				});
+                    </span>
 
-		document.getElementById('toggleConfirmPassword').addEventListener(
-				'keydown', function(e) {
-					if (e.key === 'Enter') {
-						e.preventDefault();
-					}
-				});
 
-		// Remember me functionality
-		window.addEventListener('load', function() {
-			if (localStorage.getItem('rememberMe') === 'true') {
-				document.getElementById('rememberMe').checked = true;
-				document.getElementById('loginEmail').value = localStorage
-						.getItem('email')
-						|| '';
-			}
-		});
+                </div>
 
-		document.getElementById('rememberMe').addEventListener(
-				'change',
-				function() {
-					if (this.checked) {
-						localStorage.setItem('rememberMe', 'true');
-						localStorage.setItem('email', document
-								.getElementById('loginEmail').value);
-					} else {
-						localStorage.removeItem('rememberMe');
-						localStorage.removeItem('email');
-					}
-				});
-	</script>
+
+                <!-- FEATURE 3 -->
+
+                <div class="feature">
+
+
+                    <div class="feature-icon">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                    </div>
+
+
+                    <span>
+
+                        View reports and performance
+
+                    </span>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================
+         RIGHT SIDE
+    ====================================== -->
+
+    <div class="login-right">
+
+
+        <div class="login-form-container">
+
+
+            <!-- LOGIN HEADER -->
+
+            <div class="login-header">
+
+
+                <h2>
+                    Sign In
+                </h2>
+
+
+                <p>
+                    Enter your credentials to continue
+                </p>
+
+
+            </div>
+
+
+            <!-- =================================
+                 LOGIN ERROR MESSAGE
+            ================================== -->
+
+            <% if (loginError != null) { %>
+
+
+                <div class="alert alert-error">
+
+
+                    <i class="fa-solid fa-circle-exclamation"></i>
+
+
+                    <span>
+
+                        <%= loginError %>
+
+                    </span>
+
+
+                </div>
+
+
+            <% } %>
+
+
+            <!-- =================================
+                 REGISTRATION SUCCESS MESSAGE
+            ================================== -->
+
+            <% if (registerSuccess != null) { %>
+
+
+                <div class="alert alert-success">
+
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+
+                    <span>
+
+                        <%= registerSuccess %>
+
+                    </span>
+
+
+                </div>
+
+
+            <% } %>
+
+
+            <!-- =================================
+                 LOGOUT SUCCESS MESSAGE
+            ================================== -->
+
+            <% if (logoutMessage != null) { %>
+
+
+                <div class="alert alert-success">
+
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+
+                    <span>
+
+                        <%= logoutMessage %>
+
+                    </span>
+
+
+                </div>
+
+
+            <% } %>
+
+
+            <!-- =================================
+                 LOGIN FORM
+            ================================== -->
+
+            <form
+                action="login"
+                method="post">
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+
+                    <label for="email">
+
+                        Email Address
+
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+
+                        <i class="fa-solid fa-envelope"></i>
+
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="Enter your email address"
+                            autocomplete="email"
+                            required>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+
+                    <label for="password">
+
+                        Password
+
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+
+                        <i class="fa-solid fa-lock"></i>
+
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+
+
+                        <!-- PASSWORD SHOW/HIDE BUTTON -->
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword()"
+                            aria-label="Show or hide password">
+
+
+                            <i
+                                id="passwordIcon"
+                                class="fa-solid fa-eye">
+                            </i>
+
+
+                        </button>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    class="login-btn">
+
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+
+                    Sign In
+
+
+                </button>
+
+
+            </form>
+
+
+            <!-- =================================
+                 CREATE ACCOUNT OPTION
+            ================================== -->
+
+            <div class="login-footer">
+
+
+                <p>
+
+                    Don't have an account?
+
+                    <a href="register.jsp">
+
+                        Create Account
+
+                    </a>
+
+                </p>
+
+
+                <p>
+
+                    New users can register as an
+                    Employee or Manager.
+
+                </p>
+
+
+            </div>
+
+
+            <!-- =================================
+                 SECURITY INFO
+            ================================== -->
+
+            <div class="security-info">
+
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+
+                Secure ELAMS Authentication
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================
+     PASSWORD TOGGLE SCRIPT
+========================================= -->
+
+<script>
+
+function togglePassword() {
+
+
+    const passwordInput =
+        document.getElementById("password");
+
+
+    const passwordIcon =
+        document.getElementById("passwordIcon");
+
+
+    if (passwordInput.type === "password") {
+
+
+        passwordInput.type = "text";
+
+
+        passwordIcon.classList.remove(
+            "fa-eye"
+        );
+
+
+        passwordIcon.classList.add(
+            "fa-eye-slash"
+        );
+
+
+    } else {
+
+
+        passwordInput.type = "password";
+
+
+        passwordIcon.classList.remove(
+            "fa-eye-slash"
+        );
+
+
+        passwordIcon.classList.add(
+            "fa-eye"
+        );
+
+    }
+
+}
+
+</script>
+
 
 </body>
+
 </html>

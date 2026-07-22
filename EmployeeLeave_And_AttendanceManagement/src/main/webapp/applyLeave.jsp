@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%
+Integer employeeId = (Integer) session.getAttribute("employeeId");
 
+if(employeeId == null){
+    response.sendRedirect("login.jsp");
+    return;
+}
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,23 +25,26 @@
 
 /* BODY - Main page styling */
 body {
-	font-family: Arial, sans-serif;
-	background-color: #f5f5f5;
-	color: #333;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+    min-height: 100vh;
+    padding: 30px;
+    color: #1f2937;
 }
-
 /* ===== HEADER/NAVBAR ===== */
 .navbar {
-	background-color: #2c3e50;
-	color: white;
-	padding: 15px 20px;
-	text-align: center;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    padding: 22px;
+    text-align: center;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,.08);
 }
 
 .navbar h1 {
-	font-size: 24px;
-	font-weight: bold;
+    font-size: 32px;
+    font-weight: 700;
 }
 
 /* ===== MAIN CONTAINER ===== */
@@ -163,31 +173,36 @@ body {
 
 /* Submit Button */
 .btn-submit {
-	background-color: #27ae60;
-	color: white;
-	padding: 12px 30px;
-	border: none;
-	border-radius: 4px;
-	font-size: 16px;
-	font-weight: bold;
-	cursor: pointer;
-	transition: all 0.3s;
-	flex: 1;
-	max-width: 150px;
+    background: linear-gradient(135deg,#10b981,#059669);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 30px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
 }
 
-/* Submit Button Hover Effect */
 .btn-submit:hover {
-	background-color: #229954;
-	transform: translateY(-2px);
-	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
 }
 
-/* Submit Button Active Effect */
-.btn-submit:active {
-	transform: translateY(0);
+.btn-reset {
+    background: linear-gradient(135deg,#64748b,#475569);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 30px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
 }
 
+.btn-reset:hover {
+    transform: translateY(-3px);
+}
 /* Reset Button */
 .btn-reset {
 	background-color: #95a5a6;
@@ -305,14 +320,12 @@ body {
 
 /* ===== FOOTER ===== */
 footer {
-	background-color: #2c3e50;
-	color: white;
-	text-align: center;
-	padding: 20px;
-	margin-top: 50px;
-	font-size: 12px;
+    margin-top: 50px;
+    text-align: center;
+    color: #6b7280;
+    background: transparent;
+    padding: 20px;
 }
-
 /* ===== RESPONSIVE DESIGN FOR MOBILE ===== */
 @media ( max-width : 768px) {
 	.container {
@@ -447,13 +460,20 @@ footer {
 
 				<!-- Employee ID Field -->
 				<div class="form-group">
-					<label for="employeeId"> Employee ID <span class="required">*</span>
-					</label> <input type="number" id="employeeId" name="employeeId"
-						placeholder="Enter your employee ID" required min="1"
-						title="Please enter a valid employee ID">
-					<div class="help-text">Your unique employee identification
-						number</div>
-				</div>
+    <label for="employeeId">
+        Employee ID <span class="required">*</span>
+    </label>
+
+    <input type="number"
+           id="employeeId"
+           name="employeeId"
+           value="<%= employeeId %>"
+           readonly>
+
+    <div class="help-text">
+        Employee ID is automatically populated from your login session.
+    </div>
+</div>
 
 				<!-- Leave Type Field -->
 				<div class="form-group">
@@ -529,7 +549,7 @@ footer {
 		</div>
 
 		<!-- Back Link -->
-		<a href="employeeDashboardServlet" class="back-link">← Back to Dashboard</a>
+	
 
 	</div>
 

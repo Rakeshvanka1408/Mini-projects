@@ -19,18 +19,20 @@ public interface TaskDao {
 
 	List<Task> getTasksByStatus(String status);
 
-	List<Task> searchTasks(String taskId, Integer employeeId, String status, String priority);
-
+	List<Task> searchTasks(int managerId, String taskId, Integer employeeId, String status, String priority);
 	boolean updateTaskStatus(String taskId, String status);
 
-	int getTotalTasks();
+	List<Task> getTasksByManager(int managerId);
+	
 
-	int getCompletedTasks();
+	int getTotalTasks(int managerId);
 
-	int getPendingTasks();
+	int getCompletedTasks(int managerId);
 
-	int getInProgressTasks();
+	int getPendingTasks(int managerId);
 
-	int getOverdueTasks();
+	int getInProgressTasks(int managerId);
+
+	int getOverdueTasks(int managerId);
 
 }

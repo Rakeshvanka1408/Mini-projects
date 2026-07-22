@@ -1,38 +1,47 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
+<%@ page import="java.util.List"%>
 <%@ page import="com.rakesh.elams.model.Employee"%>
 
 <%
 Employee employee = (Employee) request.getAttribute("employee");
+
 if (employee == null) {
 	response.sendRedirect("employees");
 	return;
 }
+
+List<Employee> managers = (List<Employee>) request.getAttribute("managers");
 %>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Edit Employee - ELAMS</title>
 
 <style>
-/* RESET - Remove default browser spacing */
+
+/* RESET */
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
 
-/* BODY - Main page styling */
+/* BODY */
 body {
 	font-family: Arial, sans-serif;
 	background-color: #f5f5f5;
 	color: #333;
 }
 
-/* ===== HEADER/NAVBAR ===== */
+/* HEADER */
 .navbar {
 	background-color: #2c3e50;
 	color: white;
@@ -46,14 +55,14 @@ body {
 	font-weight: bold;
 }
 
-/* ===== MAIN CONTAINER ===== */
+/* MAIN CONTAINER */
 .container {
 	max-width: 700px;
 	margin: 30px auto;
 	padding: 0 20px;
 }
 
-/* Page Title */
+/* PAGE TITLE */
 .page-title {
 	font-size: 28px;
 	color: #2c3e50;
@@ -61,7 +70,7 @@ body {
 	text-align: center;
 }
 
-/* Page Subtitle */
+/* PAGE SUBTITLE */
 .page-subtitle {
 	font-size: 14px;
 	color: #7f8c8d;
@@ -69,7 +78,7 @@ body {
 	margin-bottom: 30px;
 }
 
-/* ===== EMPLOYEE INFO CARD ===== */
+/* EMPLOYEE INFO CARD */
 .employee-info-card {
 	background-color: #ecf0f1;
 	border-left: 4px solid #3498db;
@@ -84,9 +93,7 @@ body {
 	color: #2c3e50;
 }
 
-/* ===== FORM STYLING ===== */
-
-/* Form Container */
+/* FORM CONTAINER */
 .form-container {
 	background-color: white;
 	border: 2px solid #bdc3c7;
@@ -95,12 +102,12 @@ body {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Group - Each field wrapper */
+/* FORM GROUP */
 .form-group {
 	margin-bottom: 20px;
 }
 
-/* Label Styling */
+/* LABEL */
 .form-group label {
 	display: block;
 	font-weight: bold;
@@ -109,12 +116,12 @@ body {
 	font-size: 14px;
 }
 
-/* Required field indicator */
+/* REQUIRED */
 .form-group label .required {
 	color: #e74c3c;
 }
 
-/* Input Fields Styling */
+/* INPUT AND SELECT */
 .form-group input[type="text"], .form-group input[type="email"],
 	.form-group input[type="tel"], .form-group input[type="hidden"],
 	.form-group select {
@@ -127,7 +134,7 @@ body {
 	transition: all 0.3s;
 }
 
-/* Input Focus Effect */
+/* FOCUS */
 .form-group input[type="text"]:focus, .form-group input[type="email"]:focus,
 	.form-group input[type="tel"]:focus, .form-group select:focus {
 	outline: none;
@@ -136,19 +143,19 @@ body {
 	background-color: #f9f9f9;
 }
 
-/* Input Placeholder */
+/* PLACEHOLDER */
 .form-group input::placeholder {
 	color: #95a5a6;
 }
 
-/* Help Text */
+/* HELP TEXT */
 .form-group .help-text {
 	font-size: 12px;
 	color: #95a5a6;
 	margin-top: 5px;
 }
 
-/* Buttons Container */
+/* BUTTON GROUP */
 .button-group {
 	display: flex;
 	gap: 10px;
@@ -156,7 +163,7 @@ body {
 	margin-top: 30px;
 }
 
-/* Update Button */
+/* UPDATE BUTTON */
 .btn-update {
 	background-color: #3498db;
 	color: white;
@@ -171,19 +178,13 @@ body {
 	max-width: 150px;
 }
 
-/* Update Button Hover Effect */
 .btn-update:hover {
 	background-color: #2980b9;
 	transform: translateY(-2px);
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Update Button Active Effect */
-.btn-update:active {
-	transform: translateY(0);
-}
-
-/* Reset Button */
+/* RESET BUTTON */
 .btn-reset {
 	background-color: #95a5a6;
 	color: white;
@@ -198,14 +199,13 @@ body {
 	max-width: 150px;
 }
 
-/* Reset Button Hover Effect */
 .btn-reset:hover {
 	background-color: #7f8c8d;
 	transform: translateY(-2px);
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Delete Button */
+/* DELETE BUTTON */
 .btn-delete {
 	background-color: #e74c3c;
 	color: white;
@@ -220,14 +220,13 @@ body {
 	max-width: 150px;
 }
 
-/* Delete Button Hover Effect */
 .btn-delete:hover {
 	background-color: #c0392b;
 	transform: translateY(-2px);
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Back Link */
+/* BACK LINK */
 .back-link {
 	display: inline-block;
 	margin-top: 20px;
@@ -242,7 +241,7 @@ body {
 	text-decoration: underline;
 }
 
-/* ===== ALERT MESSAGES ===== */
+/* ALERT */
 .alert {
 	padding: 12px 15px;
 	border-radius: 4px;
@@ -262,20 +261,14 @@ body {
 	color: #721c24;
 }
 
-.alert-warning {
-	background-color: #fff3cd;
-	border-left-color: #f39c12;
-	color: #856404;
-}
-
-/* ===== SECTION DIVIDER ===== */
+/* DIVIDER */
 .divider {
 	margin: 30px 0;
 	border: none;
 	border-top: 2px solid #bdc3c7;
 }
 
-/* ===== DANGER ZONE SECTION ===== */
+/* DANGER ZONE */
 .danger-zone {
 	background-color: #fff5f5;
 	border: 2px solid #f8d7da;
@@ -296,7 +289,7 @@ body {
 	margin-bottom: 15px;
 }
 
-/* ===== FOOTER ===== */
+/* FOOTER */
 footer {
 	background-color: #2c3e50;
 	color: white;
@@ -306,7 +299,7 @@ footer {
 	font-size: 12px;
 }
 
-/* ===== RESPONSIVE DESIGN FOR MOBILE ===== */
+/* RESPONSIVE */
 @media ( max-width : 768px) {
 	.container {
 		margin: 20px auto;
@@ -334,262 +327,499 @@ footer {
 
 <body>
 
-	<!-- ===== HEADER/NAVIGATION ===== -->
+	<!-- HEADER -->
+
 	<div class="navbar">
+
 		<h1>ELAMS - Edit Employee</h1>
+
 	</div>
 
-	<!-- ===== MAIN CONTENT AREA ===== -->
+
+	<!-- MAIN CONTENT -->
+
 	<div class="container">
 
-		<!-- Page Title -->
 		<h2 class="page-title">Edit Employee Details</h2>
 
-		<!-- Page Subtitle -->
 		<p class="page-subtitle">Update employee information in the form
 			below</p>
 
-		<!-- Employee Info Card -->
+
+		<!-- EMPLOYEE INFO -->
+
 		<div class="employee-info-card">
+
 			<strong>Employee ID:</strong>
 			<%=employee.getEmployee_id()%>
+
 			&nbsp;&nbsp;&nbsp;&nbsp; <strong>Current Name:</strong>
 			<%=employee.getEmployee_name()%>
+
 		</div>
 
-		<!-- Display Success Message if any -->
+
+		<!-- SUCCESS MESSAGE -->
+
 		<%
 		String successMessage = (String) request.getAttribute("successMessage");
+
 		if (successMessage != null && !successMessage.isEmpty()) {
 		%>
+
 		<div class="alert alert-success">
+
 			✓
 			<%=successMessage%>
+
 		</div>
+
 		<%
 		}
 		%>
 
-		<!-- Display Error Message if any -->
+
+		<!-- ERROR MESSAGE -->
+
 		<%
 		String errorMessage = (String) request.getAttribute("errorMessage");
+
 		if (errorMessage != null && !errorMessage.isEmpty()) {
 		%>
+
 		<div class="alert alert-error">
+
 			✕
 			<%=errorMessage%>
+
 		</div>
+
 		<%
 		}
 		%>
 
-		<!-- ===== EDIT EMPLOYEE FORM ===== -->
+
+		<!-- EDIT FORM -->
+
 		<div class="form-container">
+
 			<form action="updateEmployee" method="post"
 				onsubmit="return validateForm()">
 
-				<!-- Hidden Employee ID -->
+
+				<!-- EMPLOYEE ID -->
+
 				<input type="hidden" name="id"
 					value="<%=employee.getEmployee_id()%>">
 
-				<!-- Name Field -->
+
+				<!-- NAME -->
+
 				<div class="form-group">
+
 					<label for="name"> Employee Name <span class="required">*</span>
+
 					</label> <input type="text" id="name" name="name"
 						value="<%=employee.getEmployee_name()%>"
 						placeholder="Enter full name" required pattern="[A-Za-z\s]{2,50}"
 						title="Name must contain only letters and be 2-50 characters">
+
 					<div class="help-text">Full name of the employee</div>
+
 				</div>
 
-				<!-- Email Field -->
+
+				<!-- EMAIL -->
+
 				<div class="form-group">
+
 					<label for="email"> Email Address <span class="required">*</span>
+
 					</label> <input type="email" id="email" name="email"
-						value="<%=employee.getEmail()%>"
-						placeholder="Enter email address" required
-						title="Please enter a valid email address">
+						value="<%=employee.getEmail()%>" placeholder="Enter email address"
+						required>
+
 					<div class="help-text">Official email address</div>
+
 				</div>
 
-				<!-- Phone Field -->
+
+				<!-- PHONE -->
+
 				<div class="form-group">
+
 					<label for="phone"> Phone Number <span class="required">*</span>
+
 					</label> <input type="tel" id="phone" name="phone"
-						value="<%=employee.getPhone()%>"
-						placeholder="Enter phone number" required
-						pattern="[0-9\-\+\s]{10,15}" title="Phone must be 10-15 digits">
-					<div class="help-text">Contact phone number (10-15 digits)</div>
+						value="<%=employee.getPhone()%>" placeholder="Enter phone number"
+						required pattern="[0-9\-\+\s]{10,15}">
+
+					<div class="help-text">Contact phone number</div>
+
 				</div>
 
-				<!-- Department Field -->
+
+				<!-- DEPARTMENT -->
+
 				<div class="form-group">
+
 					<label for="department"> Department <span class="required">*</span>
-					</label> <select id="department" name="department" required
-						title="Please select a department">
+
+					</label> <select id="department" name="department" required>
+
 						<option value="">-- Select Department --</option>
+
 						<option value="IT"
-							<%="IT".equals(employee.getDepartment()) ? "selected" : ""%>>Information
-							Technology (IT)</option>
+							<%="IT".equals(employee.getDepartment()) ? "selected" : ""%>>
+							Information Technology (IT)</option>
+
 						<option value="HR"
-							<%="HR".equals(employee.getDepartment()) ? "selected" : ""%>>Human
-							Resources (HR)</option>
+							<%="HR".equals(employee.getDepartment()) ? "selected" : ""%>>
+							Human Resources (HR)</option>
+
 						<option value="Finance"
-							<%="Finance".equals(employee.getDepartment()) ? "selected" : ""%>>Finance</option>
+							<%="Finance".equals(employee.getDepartment()) ? "selected" : ""%>>
+							Finance</option>
+
 						<option value="Sales"
-							<%="Sales".equals(employee.getDepartment()) ? "selected" : ""%>>Sales</option>
+							<%="Sales".equals(employee.getDepartment()) ? "selected" : ""%>>
+							Sales</option>
+
 						<option value="Marketing"
-							<%="Marketing".equals(employee.getDepartment()) ? "selected" : ""%>>Marketing</option>
+							<%="Marketing".equals(employee.getDepartment()) ? "selected" : ""%>>
+							Marketing</option>
+
 						<option value="Operations"
-							<%="Operations".equals(employee.getDepartment()) ? "selected" : ""%>>Operations</option>
+							<%="Operations".equals(employee.getDepartment()) ? "selected" : ""%>>
+							Operations</option>
+
 						<option value="Other"
-							<%="Other".equals(employee.getDepartment()) ? "selected" : ""%>>Other</option>
+							<%="Other".equals(employee.getDepartment()) ? "selected" : ""%>>
+							Other</option>
+
 					</select>
+
 					<div class="help-text">Department of the employee</div>
+
 				</div>
 
-				<!-- Designation Field -->
+
+				<!-- DESIGNATION -->
+
 				<div class="form-group">
+
 					<label for="designation"> Designation <span
 						class="required">*</span>
-					</label> <select id="designation" name="designation" required
-						title="Please select a designation">
+
+					</label> <select id="designation" name="designation" required>
+
 						<option value="">-- Select Designation --</option>
+
 						<option value="Manager"
-							<%="Manager".equals(employee.getDesignation()) ? "selected" : ""%>>Manager</option>
+							<%="Manager".equals(employee.getDesignation()) ? "selected" : ""%>>
+							Manager</option>
+
 						<option value="Senior Developer"
-							<%="Senior Developer".equals(employee.getDesignation()) ? "selected" : ""%>>Senior
-							Developer</option>
+							<%="Senior Developer".equals(employee.getDesignation()) ? "selected" : ""%>>
+							Senior Developer</option>
+
 						<option value="Developer"
-							<%="Developer".equals(employee.getDesignation()) ? "selected" : ""%>>Developer</option>
-						<option value="Junior Developer"
-							<%="Junior Developer".equals(employee.getDesignation()) ? "selected" : ""%>>Junior
+							<%="Developer".equals(employee.getDesignation()) ? "selected" : ""%>>
 							Developer</option>
+
+						<option value="Junior Developer"
+							<%="Junior Developer".equals(employee.getDesignation()) ? "selected" : ""%>>
+							Junior Developer</option>
+
 						<option value="Analyst"
-							<%="Analyst".equals(employee.getDesignation()) ? "selected" : ""%>>Analyst</option>
+							<%="Analyst".equals(employee.getDesignation()) ? "selected" : ""%>>
+							Analyst</option>
+
 						<option value="Executive"
-							<%="Executive".equals(employee.getDesignation()) ? "selected" : ""%>>Executive</option>
+							<%="Executive".equals(employee.getDesignation()) ? "selected" : ""%>>
+							Executive</option>
+
 						<option value="Intern"
-							<%="Intern".equals(employee.getDesignation()) ? "selected" : ""%>>Intern</option>
+							<%="Intern".equals(employee.getDesignation()) ? "selected" : ""%>>
+							Intern</option>
+
 						<option value="Other"
-							<%="Other".equals(employee.getDesignation()) ? "selected" : ""%>>Other</option>
+							<%="Other".equals(employee.getDesignation()) ? "selected" : ""%>>
+							Other</option>
+
 					</select>
+
 					<div class="help-text">Job designation/position</div>
+
 				</div>
 
-				<!-- Buttons -->
+
+				<!-- MANAGER -->
+
+				<div class="form-group">
+
+					<label for="managerId"> Reports To / Manager <span
+						class="required">*</span>
+
+					</label> <select id="managerId" name="managerId" required>
+
+						<option value="">-- Select Manager --</option>
+
+						<%
+						if (managers != null && !managers.isEmpty()) {
+
+							for (Employee manager : managers) {
+
+								if (manager.getEmployee_id() == employee.getEmployee_id()) {
+
+							continue;
+								}
+
+								boolean selected = employee.getManagerId() != null
+								&& employee.getManagerId().intValue() == manager.getEmployee_id();
+						%>
+
+						<option value="<%=manager.getEmployee_id()%>"
+							<%=selected ? "selected" : ""%>>
+
+							<%=manager.getEmployee_name()%> (ID:
+							<%=manager.getEmployee_id()%>)
+
+						</option>
+
+						<%
+						}
+
+						} else {
+						%>
+
+						<option value="">No managers available</option>
+
+						<%
+						}
+						%>
+
+					</select>
+
+					<div class="help-text">Select the manager this employee
+						reports to.</div>
+
+				</div>
+
+
+				<!-- BUTTONS -->
+
 				<div class="button-group">
+
 					<button type="submit" class="btn-update">Update Employee</button>
+
 					<button type="reset" class="btn-reset">Reset Form</button>
+
 				</div>
 
 			</form>
+
 		</div>
 
-		<!-- Divider -->
+
+		<!-- DIVIDER -->
+
 		<hr class="divider">
 
-		<!-- Danger Zone - Delete Employee -->
+
+		<!-- DANGER ZONE -->
+
 		<div class="danger-zone">
+
 			<h3>⚠️ Danger Zone</h3>
+
 			<p>Deleting an employee will permanently remove all their records
 				from the system. This action cannot be undone.</p>
+
 			<button class="btn-delete"
-				onclick="deleteEmployee(<%=employee.getEmployee_id()%>)">Delete
-				Employee</button>
+				onclick="deleteEmployee(<%=employee.getEmployee_id()%>)">
+
+				Delete Employee</button>
+
 		</div>
 
-		<!-- Back Link -->
-		<a href="viewEmployeesServlet" class="back-link">← Back to Employees List</a>
+
+		<!-- BACK LINK -->
+
+		<a href="viewEmployeesServlet" class="back-link"> ← Back to
+			Employees List </a>
 
 	</div>
 
-	<!-- ===== FOOTER ===== -->
+
+	<!-- FOOTER -->
+
 	<footer>
+
 		<p>&copy; 2024 ELAMS - Employee Leave & Attendance Management
 			System. All rights reserved.</p>
+
 	</footer>
 
-	<!-- ===== JAVASCRIPT VALIDATION ===== -->
+
+	<!-- JAVASCRIPT -->
+
 	<script>
-		// Validate form before submission
-		function validateForm() {
-			var name = document.getElementById("name").value.trim();
-			var email = document.getElementById("email").value.trim();
-			var phone = document.getElementById("phone").value.trim();
-			var department = document.getElementById("department").value;
-			var designation = document.getElementById("designation").value;
 
-			// Check if name is valid
-			if (name.length < 2 || name.length > 50) {
-				alert("Name must be between 2 and 50 characters");
-				document.getElementById("name").focus();
-				return false;
-			}
+function validateForm() {
 
-			// Check if name contains only letters and spaces
-			if (!/^[A-Za-z\s]+$/.test(name)) {
-				alert("Name must contain only letters and spaces");
-				document.getElementById("name").focus();
-				return false;
-			}
+	var name =
+		document.getElementById("name").value.trim();
 
-			// Check if email is valid
-			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailRegex.test(email)) {
-				alert("Please enter a valid email address");
-				document.getElementById("email").focus();
-				return false;
-			}
+	var email =
+		document.getElementById("email").value.trim();
 
-			// Check if phone is valid
-			var phoneRegex = /^[0-9\-\+\s]{10,15}$/;
-			if (!phoneRegex.test(phone)) {
-				alert("Phone must be 10-15 digits");
-				document.getElementById("phone").focus();
-				return false;
-			}
+	var phone =
+		document.getElementById("phone").value.trim();
 
-			// Check if department is selected
-			if (department === "" || department === null) {
-				alert("Please select a department");
-				document.getElementById("department").focus();
-				return false;
-			}
+	var department =
+		document.getElementById("department").value;
 
-			// Check if designation is selected
-			if (designation === "" || designation === null) {
-				alert("Please select a designation");
-				document.getElementById("designation").focus();
-				return false;
-			}
+	var designation =
+		document.getElementById("designation").value;
 
-			// All validations passed
-			return true;
+	var managerId =
+		document.getElementById("managerId").value;
+
+
+	if (name.length < 2 || name.length > 50) {
+
+		alert("Name must be between 2 and 50 characters");
+
+		document.getElementById("name").focus();
+
+		return false;
+	}
+
+
+	if (!/^[A-Za-z\s]+$/.test(name)) {
+
+		alert("Name must contain only letters and spaces");
+
+		document.getElementById("name").focus();
+
+		return false;
+	}
+
+
+	var emailRegex =
+		/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+	if (!emailRegex.test(email)) {
+
+		alert("Please enter a valid email address");
+
+		document.getElementById("email").focus();
+
+		return false;
+	}
+
+
+	var phoneRegex =
+		/^[0-9\-\+\s]{10,15}$/;
+
+	if (!phoneRegex.test(phone)) {
+
+		alert("Phone must be 10-15 digits");
+
+		document.getElementById("phone").focus();
+
+		return false;
+	}
+
+
+	if (department === "") {
+
+		alert("Please select a department");
+
+		document.getElementById("department").focus();
+
+		return false;
+	}
+
+
+	if (designation === "") {
+
+		alert("Please select a designation");
+
+		document.getElementById("designation").focus();
+
+		return false;
+	}
+
+
+	if (managerId === "") {
+
+		alert("Please select a manager");
+
+		document.getElementById("managerId").focus();
+
+		return false;
+	}
+
+
+	return true;
+
+}
+
+
+function deleteEmployee(employeeId) {
+
+	var confirmDelete =
+		confirm(
+			"Are you sure you want to delete this employee?\n\n"
+			+ "Employee ID: " + employeeId
+			+ "\n\nThis action cannot be undone!"
+		);
+
+
+	if (confirmDelete) {
+
+		window.location.href =
+			"deleteEmployee?id=" + employeeId;
+
+	}
+
+}
+
+
+/* INPUT FOCUS */
+
+var inputElements =
+	document.querySelectorAll("input, select");
+
+
+inputElements.forEach(function(element) {
+
+	element.addEventListener(
+		"focus",
+		function() {
+
+			this.style.borderColor =
+				"#3498db";
+
 		}
+	);
 
-		// Delete employee function
-		function deleteEmployee(employeeId) {
-			var confirmDelete = confirm("Are you sure you want to delete this employee?\n\nEmployee ID: " + employeeId + "\n\nThis action cannot be undone!");
-			
-			if (confirmDelete) {
-				// Redirect to delete servlet
-				window.location.href = "deleteEmployee?id=" + employeeId;
-			}
+
+	element.addEventListener(
+		"blur",
+		function() {
+
+			this.style.borderColor =
+				"#bdc3c7";
+
 		}
+	);
 
-		// Show visual feedback on input focus
-		var inputElements = document.querySelectorAll("input, select");
-		inputElements.forEach(function(element) {
-			element.addEventListener("focus", function() {
-				this.style.borderColor = "#3498db";
-			});
+});
 
-			element.addEventListener("blur", function() {
-				this.style.borderColor = "#bdc3c7";
-			});
-		});
-	</script>
+</script>
 
 </body>
 

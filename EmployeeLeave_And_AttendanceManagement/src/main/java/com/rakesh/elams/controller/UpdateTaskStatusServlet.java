@@ -8,7 +8,6 @@ import com.rakesh.elams.dao.TaskDaoImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-
 @WebServlet("/UpdateTaskStatusServlet")
 public class UpdateTaskStatusServlet extends HttpServlet {
 
@@ -17,21 +16,18 @@ public class UpdateTaskStatusServlet extends HttpServlet {
     TaskDao dao = new TaskDaoImpl();
 
     protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
+                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        String taskId =
-                request.getParameter("taskId");
+        String taskId = request.getParameter("taskId");
+        String status = request.getParameter("status");
 
-        String status =
-                request.getParameter("status");
-
-        boolean result =
-                dao.updateTaskStatus(taskId, status);
+        boolean result = dao.updateTaskStatus(taskId, status);
 
         if(result) {
             response.sendRedirect(
-                    "ViewTasksServlet");
+                    request.getContextPath()
+                    + "/EmployeeTasksServlet");
         } else {
             response.getWriter().println(
                     "Status Update Failed");

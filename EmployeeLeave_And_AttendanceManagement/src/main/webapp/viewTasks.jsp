@@ -5,8 +5,8 @@
 String role = (String) session.getAttribute("role");
 
 if (role == null || !"MANAGER".equalsIgnoreCase(role)) {
-    response.sendRedirect("login.jsp");
-    return;
+	response.sendRedirect("login.jsp");
+	return;
 }
 
 List<Task> tasks = (List<Task>) request.getAttribute("tasks");
@@ -182,7 +182,8 @@ body {
 
 .form-group select {
 	appearance: none;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234f46e5' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+	background-image:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234f46e5' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
 	background-repeat: no-repeat;
 	background-position: right 10px center;
 	padding-right: 30px;
@@ -347,6 +348,7 @@ tbody tr:last-child td {
 	cursor: pointer;
 	transition: all 0.3s ease;
 	text-decoration: none;
+	font-family: inherit;
 }
 
 .edit-btn {
@@ -371,6 +373,11 @@ tbody tr:last-child td {
 	color: white;
 	transform: translateY(-2px);
 	box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.delete-form {
+	display: inline-block;
+	margin: 0;
 }
 
 .download-btn {
@@ -465,84 +472,68 @@ tbody tr:last-child td {
 	letter-spacing: 0.5px;
 }
 
-@media (max-width: 1024px) {
+@media ( max-width : 1024px) {
 	.card {
 		padding: 20px;
 	}
-
 	.search-form {
 		grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 	}
-
 	table {
 		font-size: 13px;
 	}
-
 	th, td {
 		padding: 12px 10px;
 	}
 }
 
-@media (max-width: 768px) {
+@media ( max-width : 768px) {
 	.card-header {
 		flex-direction: column;
 		align-items: flex-start;
 	}
-
 	.create-btn {
 		width: 100%;
 	}
-
 	.search-form {
 		grid-template-columns: 1fr;
 	}
-
 	.btn-group {
 		width: 100%;
 	}
-
 	.search-btn, .reset-btn {
 		flex: 1;
 	}
-
 	.action-buttons {
 		flex-direction: column;
 	}
-
 	.action-btn {
 		width: 100%;
 	}
-
 	.stats-bar {
 		grid-template-columns: repeat(2, 1fr);
 	}
 }
 
-@media (max-width: 480px) {
+@media ( max-width : 480px) {
 	body {
 		padding: 15px 10px;
 	}
-
 	.card {
 		padding: 15px;
 	}
-
 	.header-left h2 {
 		font-size: 22px;
 	}
-
 	.table-wrapper {
 		max-height: 400px;
 	}
-
 	table {
 		font-size: 12px;
 	}
-
 	th, td {
 		padding: 10px 8px;
 	}
-
 	.stats-bar {
 		grid-template-columns: 1fr;
 	}
@@ -561,8 +552,8 @@ tbody tr:last-child td {
 					<i class="fa-solid fa-list-check"></i>
 					<h2>Task Management</h2>
 				</div>
-				<a href="createTask.jsp" class="create-btn">
-					<i class="fa-solid fa-plus"></i> Create Task
+				<a href="CreateTaskPageServlet" class="create-btn"> <i
+					class="fa-solid fa-plus"></i> Create Task
 				</a>
 			</div>
 
@@ -586,7 +577,7 @@ tbody tr:last-child td {
 						if (tasks != null) {
 							for (Task task : tasks) {
 								if (task.getStatus() == Task.Status.PENDING) {
-									pending++;
+							pending++;
 								}
 							}
 						}
@@ -602,7 +593,7 @@ tbody tr:last-child td {
 						if (tasks != null) {
 							for (Task task : tasks) {
 								if (task.getStatus() == Task.Status.IN_PROGRESS) {
-									progress++;
+							progress++;
 								}
 							}
 						}
@@ -618,7 +609,7 @@ tbody tr:last-child td {
 						if (tasks != null) {
 							for (Task task : tasks) {
 								if (task.getStatus() == Task.Status.COMPLETED) {
-									completed++;
+							completed++;
 								}
 							}
 						}
@@ -633,19 +624,18 @@ tbody tr:last-child td {
 				<form action="SearchTaskServlet" method="get" class="search-form">
 
 					<div class="form-group">
-						<label><i class="fa-solid fa-search"></i> Task ID</label>
-						<input type="text" name="taskId" placeholder="Search task ID...">
+						<label><i class="fa-solid fa-search"></i> Task ID</label> <input
+							type="text" name="taskId" placeholder="Search task ID...">
 					</div>
 
 					<div class="form-group">
-						<label><i class="fa-solid fa-user"></i> Employee ID</label>
-						<input type="number" name="employeeId"
-							placeholder="Search employee...">
+						<label><i class="fa-solid fa-user"></i> Employee ID</label> <input
+							type="number" name="employeeId" placeholder="Search employee...">
 					</div>
 
 					<div class="form-group">
-						<label><i class="fa-solid fa-circle-check"></i> Status</label>
-						<select name="status">
+						<label><i class="fa-solid fa-circle-check"></i> Status</label> <select
+							name="status">
 							<option value="">All Status</option>
 							<option value="PENDING">Pending</option>
 							<option value="IN_PROGRESS">In Progress</option>
@@ -654,8 +644,8 @@ tbody tr:last-child td {
 					</div>
 
 					<div class="form-group">
-						<label><i class="fa-solid fa-flag"></i> Priority</label>
-						<select name="priority">
+						<label><i class="fa-solid fa-flag"></i> Priority</label> <select
+							name="priority">
 							<option value="">All Priority</option>
 							<option value="HIGH">High</option>
 							<option value="MEDIUM">Medium</option>
@@ -667,8 +657,8 @@ tbody tr:last-child td {
 						<button type="submit" class="search-btn">
 							<i class="fa-solid fa-search"></i> Search
 						</button>
-						<a href="ViewTasksServlet" class="reset-btn">
-							<i class="fa-solid fa-redo"></i> Reset
+						<a href="ViewTasksServlet" class="reset-btn"> <i
+							class="fa-solid fa-redo"></i> Reset
 						</a>
 					</div>
 
@@ -688,7 +678,9 @@ tbody tr:last-child td {
 								<th>Employee ID</th>
 								<th>Priority</th>
 								<th>Status</th>
+								<th>Assigned Date</th>
 								<th>Due Date</th>
+								<th>Completed Date</th>
 								<th>Actions</th>
 							</tr>
 						</thead>
@@ -698,7 +690,7 @@ tbody tr:last-child td {
 								String priorityClass = "badge-priority-" + task.getPriority().toString().toLowerCase();
 								String statusValue = task.getStatus().toString();
 								String statusClass = "badge-status-pending";
-								
+
 								if (statusValue.equals("IN_PROGRESS")) {
 									statusClass = "badge-status-progress";
 								} else if (statusValue.equals("COMPLETED")) {
@@ -709,41 +701,52 @@ tbody tr:last-child td {
 								<td><strong><%=task.getTaskId()%></strong></td>
 								<td><%=task.getTaskName()%></td>
 								<td><%=task.getEmployeeId()%></td>
-								<td>
-									<span class="badge <%=priorityClass%>">
-										<%=task.getPriority()%>
-									</span>
-								</td>
-								<td>
-									<span class="badge <%=statusClass%>">
-										<%=statusValue%>
-									</span>
-								</td>
+								<td><span class="badge <%=priorityClass%>"> <%=task.getPriority()%>
+								</span></td>
+								<td><span class="badge <%=statusClass%>"> <%=statusValue%>
+								</span></td>
+								<td><%=task.getAssignedDate()%></td>
+
 								<td><%=task.getDueDate()%></td>
+
+								<td>
+									<%
+									if (task.getCompletionDate() != null) {
+										out.print(task.getCompletionDate());
+									} else {
+										out.print("-");
+									}
+									%>
+								</td>
+
+								
 								<td>
 									<div class="action-buttons">
 										<a class="action-btn edit-btn"
 											href="editTasks.jsp?taskId=<%=task.getTaskId()%>"
-											title="Edit Task">
-											<i class="fa-solid fa-pen"></i> Edit
+											title="Edit Task"> <i class="fa-solid fa-pen"></i> Edit
 										</a>
 										<%
 										if (task.getDocumentPath() != null && !task.getDocumentPath().trim().isEmpty()) {
 										%>
 										<a class="action-btn download-btn"
-											href="DownloadTaskFileServlet?file=<%=task.getDocumentPath()%>"
-											title="Download Document">
-											<i class="fa-solid fa-download"></i> Download
+											href="DownloadTaskFileServlet?file=<%=java.net.URLEncoder.encode(task.getDocumentPath(), "UTF-8")%>"
+											title="Download Document"> <i
+											class="fa-solid fa-download"></i> Download
 										</a>
 										<%
 										}
 										%>
-										<a class="action-btn delete-btn"
-											href="DeleteTaskServlet?taskId=<%=task.getTaskId()%>"
-											onclick="return confirm('Are you sure you want to delete this task?');"
-											title="Delete Task">
-											<i class="fa-solid fa-trash"></i> Delete
-										</a>
+										<form class="delete-form" action="DeleteTaskServlet"
+											method="post"
+											onsubmit="return confirm('Are you sure you want to delete this task?');">
+											<input type="hidden" name="taskId"
+												value="<%=task.getTaskId()%>">
+											<button type="submit" class="action-btn delete-btn"
+												title="Delete Task">
+												<i class="fa-solid fa-trash"></i> Delete
+											</button>
+										</form>
 									</div>
 								</td>
 							</tr>
@@ -759,8 +762,8 @@ tbody tr:last-child td {
 				<div class="empty-state">
 					<i class="fa-solid fa-inbox"></i>
 					<p>No tasks found</p>
-					<a href="createTask.jsp">
-						<i class="fa-solid fa-plus"></i> Create Your First Task
+					<a href="CreateTaskPageServlet"> <i class="fa-solid fa-plus"></i>
+						Create Your First Task
 					</a>
 				</div>
 				<%

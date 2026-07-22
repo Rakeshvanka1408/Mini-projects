@@ -7,23 +7,29 @@ import com.rakesh.elams.model.Attendance;
 
 public interface AttendanceDao {
 
-    public boolean markAttendance(Attendance attendance) ;
+    boolean checkIn(Attendance attendance);
 
-    public boolean updateAttendance(Attendance attendance) ;
+    boolean checkOut(int employeeId);
 
-    public boolean deleteAttendance(int attendanceId) ;
+    Attendance getTodayAttendance(int employeeId);
 
-    public Attendance getAttendanceById(int attendanceId);
+    List<Attendance> getAttendanceByEmployee(int employeeId);
 
-    public List<Attendance> getAttendanceByEmployee(int employeeId) ;
+    boolean hasCheckedInToday(int employeeId);
 
-    public List<Attendance> getAttendanceByDate(Date attendanceDate);
+    // Existing methods - DO NOT REMOVE
+    int getPresentCount(Date date);
 
-    public List<Attendance> getAllAttendance();
+    int getAbsentCount(Date date);
 
-    public int getPresentCount(Date date) ;
+    int getHalfDayCount(Date date);
 
-    public int getAbsentCount(Date date) ;
+    // New manager-specific methods
+    List<Attendance> getAttendanceByManager(int managerId);
 
-    public int getHalfDayCount(Date date) ;
+    int getPresentCountByManager(Date date, int managerId);
+
+    int getAbsentCountByManager(Date date, int managerId);
+
+    int getHalfDayCountByManager(Date date, int managerId);
 }

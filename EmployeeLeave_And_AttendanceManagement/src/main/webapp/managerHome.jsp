@@ -2,10 +2,11 @@
 	pageEncoding="UTF-8"%>
 
 <%
-String managerName = (String) session.getAttribute("managerName");
+String role = (String) session.getAttribute("role");
 
-if(managerName == null || managerName.trim().isEmpty()){
-    managerName = "Manager";
+if (role == null || !role.equalsIgnoreCase("MANAGER")) {
+	response.sendRedirect("login.jsp");
+	return;
 }
 %>
 
@@ -57,96 +58,11 @@ body {
 	margin: 0 auto;
 }
 
-/* Welcome Card */
-.welcome-card {
-	background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-	border-radius: 16px;
-	padding: 50px 40px;
-	color: white;
-	margin-bottom: 40px;
-	box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
-	animation: slideDown 0.5s ease-out;
-	position: relative;
-	overflow: hidden;
-}
-
-.welcome-card::before {
-	content: '';
-	position: absolute;
-	top: -50%;
-	right: -10%;
-	width: 400px;
-	height: 400px;
-	background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-	border-radius: 50%;
-}
-
-.welcome-card::after {
-	content: '';
-	position: absolute;
-	bottom: -30%;
-	left: -5%;
-	width: 300px;
-	height: 300px;
-	background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-	border-radius: 50%;
-}
-
-@keyframes slideDown {
-	from {
-		opacity: 0;
-		transform: translateY(-30px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-.welcome-content {
-	position: relative;
-	z-index: 1;
-	display: flex;
-	align-items: center;
-	gap: 30px;
-}
-
-.welcome-icon {
-	font-size: 80px;
-	opacity: 0.9;
-	flex-shrink: 0;
-	animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-	0%, 100% {
-		transform: translateY(0px);
-	}
-	50% {
-		transform: translateY(-10px);
-	}
-}
-
-.welcome-text h1 {
-	font-size: 42px;
-	font-weight: 700;
-	margin: 0 0 12px 0;
-	letter-spacing: -0.5px;
-}
-
-.welcome-text p {
-	font-size: 17px;
-	opacity: 0.95;
-	margin: 0;
-	line-height: 1.6;
-}
-
 /* Features Grid */
 .features-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 	gap: 30px;
-	margin-top: 40px;
 	animation: slideUp 0.6s ease-out;
 }
 
@@ -171,6 +87,10 @@ body {
 	position: relative;
 	overflow: hidden;
 	height: 100%;
+	display: block;
+	text-decoration: none;
+	color: inherit;
+	cursor: pointer;
 }
 
 .feature-card::before {
@@ -190,6 +110,10 @@ body {
 	box-shadow: 0 25px 50px rgba(99, 102, 241, 0.15);
 }
 
+.feature-card.employees {
+	border-top-color: var(--primary);
+}
+
 .feature-card.tasks {
 	border-top-color: var(--accent);
 }
@@ -207,6 +131,14 @@ body {
 	background-clip: text;
 	position: relative;
 	z-index: 1;
+	display: block;
+}
+
+.feature-card.employees .feature-icon {
+	background: linear-gradient(135deg, var(--primary), var(--secondary));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
 }
 
 .feature-card.tasks .feature-icon {
@@ -276,26 +208,6 @@ body {
 
 /* Responsive */
 @media (max-width: 1024px) {
-	.welcome-card {
-		padding: 40px 30px;
-	}
-
-	.welcome-content {
-		gap: 20px;
-	}
-
-	.welcome-icon {
-		font-size: 60px;
-	}
-
-	.welcome-text h1 {
-		font-size: 36px;
-	}
-
-	.welcome-text p {
-		font-size: 16px;
-	}
-
 	.features-grid {
 		gap: 20px;
 	}
@@ -312,29 +224,6 @@ body {
 @media (max-width: 768px) {
 	body {
 		padding: 20px 15px;
-	}
-
-	.welcome-card {
-		padding: 35px 25px;
-		margin-bottom: 30px;
-	}
-
-	.welcome-content {
-		flex-direction: column;
-		gap: 15px;
-		text-align: center;
-	}
-
-	.welcome-icon {
-		font-size: 50px;
-	}
-
-	.welcome-text h1 {
-		font-size: 28px;
-	}
-
-	.welcome-text p {
-		font-size: 15px;
 	}
 
 	.features-grid {
@@ -369,23 +258,6 @@ body {
 @media (max-width: 480px) {
 	body {
 		padding: 15px 10px;
-	}
-
-	.welcome-card {
-		padding: 25px 20px;
-		margin-bottom: 20px;
-	}
-
-	.welcome-icon {
-		font-size: 40px;
-	}
-
-	.welcome-text h1 {
-		font-size: 22px;
-	}
-
-	.welcome-text p {
-		font-size: 14px;
 	}
 
 	.features-grid {
@@ -423,24 +295,11 @@ body {
 
 	<div class="container">
 
-		<!-- Welcome Card -->
-		<div class="welcome-card">
-			<div class="welcome-content">
-				<div class="welcome-icon">
-					<i class="fa-solid fa-chart-line"></i>
-				</div>
-				<div class="welcome-text">
-					<h1>Welcome, <%=managerName%>!</h1>
-					<p>Manage employees, tasks, and reports from one centralized dashboard. Get real-time insights and stay organized.</p>
-				</div>
-			</div>
-		</div>
-
 		<!-- Features Grid -->
 		<div class="features-grid">
 
 			<!-- Manage Employees -->
-			<div class="feature-card employees">
+			<a class="feature-card employees" href="ManagerViewEmployeesServlet">
 				<i class="fa-solid fa-users feature-icon"></i>
 				<h2 class="feature-title">Manage Employees</h2>
 				<p class="feature-description">View and manage all employee information, departments, and designations.</p>
@@ -449,10 +308,10 @@ body {
 					<li>Track departments</li>
 					<li>Monitor designations</li>
 				</ul>
-			</div>
+			</a>
 
 			<!-- Manage Tasks -->
-			<div class="feature-card tasks">
+			<a class="feature-card tasks" href="ViewTasksServlet">
 				<i class="fa-solid fa-list-check feature-icon"></i>
 				<h2 class="feature-title">Manage Tasks</h2>
 				<p class="feature-description">Create, assign, and track tasks for your team with ease.</p>
@@ -461,10 +320,10 @@ body {
 					<li>Assign to employees</li>
 					<li>Track progress</li>
 				</ul>
-			</div>
+			</a>
 
 			<!-- View Reports -->
-			<div class="feature-card reports">
+			<a class="feature-card reports" href="TaskReportServlet">
 				<i class="fa-solid fa-chart-bar feature-icon"></i>
 				<h2 class="feature-title">View Reports</h2>
 				<p class="feature-description">Access comprehensive reports and analytics for better decision making.</p>
@@ -473,7 +332,7 @@ body {
 					<li>Performance metrics</li>
 					<li>Team analytics</li>
 				</ul>
-			</div>
+			</a>
 
 		</div>
 

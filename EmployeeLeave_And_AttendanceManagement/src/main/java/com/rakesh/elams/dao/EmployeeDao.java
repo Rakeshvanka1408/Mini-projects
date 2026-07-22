@@ -10,4 +10,6 @@ public interface EmployeeDao {
 	public List<Employee> getAllEmployees();
 	 public boolean updateEmployee(Employee employee);
 	 public boolean deleteEmployee(int id);
+	 List<Employee> getEmployeesByManager(int managerId);
+	 List<Employee> getAllManagers();
 }

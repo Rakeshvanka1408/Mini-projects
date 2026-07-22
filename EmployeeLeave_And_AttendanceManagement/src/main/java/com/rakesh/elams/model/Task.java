@@ -8,7 +8,7 @@ public class Task {
 	private String taskName;
 	private String description;
 	private int employeeId;
-	private String managerId;
+	private int managerId;
 	private Priority priority;
 	private Status status;
 	private Date assignedDate;
@@ -32,7 +32,7 @@ public class Task {
 
 	}
 
-	public Task(String taskId, String taskName, String description, int employeeId, String managerId,
+	public Task(String taskId, String taskName, String description, int employeeId, int managerId,
 			Priority priority, Status status, Date assignedDate, Date dueDate, Date completionDate) {
 
 		this.taskId = taskId;
@@ -79,11 +79,11 @@ public class Task {
 		this.employeeId = employeeId;
 	}
 
-	public String getManagerId() {
+	public int getManagerId() {
 		return managerId;
 	}
 
-	public void setManagerId(String managerId) {
+	public void setManagerId(int managerId) {
 		this.managerId = managerId;
 	}
 

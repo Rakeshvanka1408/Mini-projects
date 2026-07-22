@@ -14,7 +14,15 @@ public class User {
 		this.pwd = pwd;
 		this.role = role;
 	}
-	
+	private Integer managerId;
+
+	public Integer getManagerId() {
+	    return managerId;
+	}
+
+	public void setManagerId(Integer managerId) {
+	    this.managerId = managerId;
+	}
 	public String getName() {
 		return name;
 	}

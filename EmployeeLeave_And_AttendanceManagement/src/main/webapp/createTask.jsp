@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="com.rakesh.elams.model.Employee"%>
 
 <%
 String role = (String) session.getAttribute("role");
@@ -9,10 +11,14 @@ if (role == null || !"MANAGER".equalsIgnoreCase(role)) {
 	return;
 }
 
-Integer managerId = (Integer) session.getAttribute("userId");
-java.time.LocalDate today = java.time.LocalDate.now();
-%>
+Integer managerId = (Integer) session.getAttribute("employeeId");
+String managerIdDisplay = (managerId == null) ? "N/A" : String.valueOf(managerId);
 
+java.time.LocalDate today = java.time.LocalDate.now();
+
+List<Employee> employees =
+        (List<Employee>) request.getAttribute("employees");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,17 +75,17 @@ body {
 	animation: slideUp 0.5s ease-out;
 }
 
-@
-keyframes slideUp {from { opacity:0;
-	transform: translateY(20px);
+@keyframes slideUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
-to {
-	opacity: 1;
-	transform: translateY(0);
-}
-
-}
 .card-header {
 	display: flex;
 	align-items: center;
@@ -338,7 +344,7 @@ select {
 					<label> <i class="fa-solid fa-align-left"></i> <span
 						class="label-text">Description <span class="required">*</span></span>
 					</label>
-					<textarea name="description"
+					<textarea name="description" required
 						placeholder="Provide detailed task description..."></textarea>
 				</div>
 
@@ -352,20 +358,57 @@ select {
 				</div>
 
 				<div class="form-row">
-					<div class="form-group">
-						<label> <i class="fa-solid fa-user"></i> <span
-							class="label-text">Employee ID <span class="required">*</span></span>
-						</label> <input type="number" name="employeeId"
-							placeholder="Enter employee ID" required>
-					</div>
 
-					<div class="form-group">
-						<label> <i class="fa-solid fa-briefcase"></i> <span
-							class="label-text">Manager</span>
-						</label> <input type="text" name="managerId" value="<%=managerId%>"
-							readonly>
-					</div>
-				</div>
+    <!-- Employee Dropdown -->
+    <div class="form-group">
+        <label>
+            <i class="fa-solid fa-user"></i>
+            <span class="label-text">
+                Employee <span class="required">*</span>
+            </span>
+        </label>
+
+        <select name="employeeId" required>
+
+            <option value="">Select Employee</option>
+
+            <%
+            if (employees != null && !employees.isEmpty()) {
+                for (Employee emp : employees) {
+            %>
+
+            <option value="<%=emp.getEmployee_id()%>">
+                EMP-<%=emp.getEmployee_id()%> -
+                <%=emp.getEmployee_name()%>
+            </option>
+
+            <%
+                }
+            } else {
+            %>
+
+            <option value="">No employees assigned to you</option>
+
+            <%
+            }
+            %>
+
+        </select>
+    </div>
+
+    <!-- Manager -->
+    <div class="form-group">
+        <label>
+            <i class="fa-solid fa-briefcase"></i>
+            <span class="label-text">Manager ID</span>
+        </label>
+
+        <input type="text"
+               value="<%=managerIdDisplay%>"
+               readonly>
+    </div>
+
+</div>
 
 				<div class="form-row">
 					<div class="form-group">

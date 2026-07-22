@@ -254,7 +254,7 @@ footer {
 	<!-- Navigation Bar -->
 	<div class="navbar">
 		<h1>ELAMS - Reports</h1>
-		<a href="adminDashboard.jsp" class="back-btn">← Back to Dashboard</a>
+		
 	</div>
 
 	<!-- Main Container -->
@@ -353,8 +353,7 @@ footer {
 		<div class="action-buttons">
 			<button class="btn" onclick="window.print()">🖨️ Print
 				Reports</button>
-			<a href="adminDashboard.jsp" class="btn secondary">← Back to
-				Dashboard</a>
+			
 		</div>
 
 	</div>

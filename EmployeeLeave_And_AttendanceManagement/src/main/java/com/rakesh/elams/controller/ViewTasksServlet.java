@@ -14,23 +14,25 @@ import jakarta.servlet.http.*;
 @WebServlet("/ViewTasksServlet")
 public class ViewTasksServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    TaskDao dao = new TaskDaoImpl();
+	TaskDao dao = new TaskDaoImpl();
 
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        System.out.println("ViewTasksServlet reached");
+		System.out.println("ViewTasksServlet reached");
 
-        List<Task> tasks = dao.getAllTasks();
+		HttpSession session = request.getSession(false);
 
-        System.out.println("Tasks count = " + tasks.size());
+		Integer managerId = (Integer) session.getAttribute("employeeId");
 
-        request.setAttribute("tasks", tasks);
+		System.out.println("Logged in manager employeeId = " + managerId);
 
-        request.getRequestDispatcher("viewTasks.jsp")
-                .forward(request, response);
-    }
+		List<Task> tasks = dao.getTasksByManager(managerId);
+
+		request.setAttribute("tasks", tasks);
+
+		request.getRequestDispatcher("viewTasks.jsp").forward(request, response);
+	}
 }

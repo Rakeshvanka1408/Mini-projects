@@ -24,15 +24,46 @@ public class AttendanceHistoryServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+	        HttpServletResponse response)
+	        throws ServletException, IOException {
 
-		int employeeId = Integer.parseInt(request.getParameter("employeeId"));
+	    int employeeId =
+	            Integer.parseInt(
+	                    request.getParameter("employeeId"));
 
-		List<Attendance> attendanceList = attendanceDao.getAttendanceByEmployee(employeeId);
+	    List<Attendance> attendanceList =
+	            attendanceDao.getAttendanceByEmployee(employeeId);
 
-		request.setAttribute("attendanceList", attendanceList);
+	    int present = 0;
+	    int absent = 0;
+	    int halfDay = 0;
 
-		request.getRequestDispatcher("attendanceHistory.jsp").forward(request, response);
+	    for (Attendance attendance : attendanceList) {
+
+	        String status = attendance.getStatus();
+
+	        if ("Present".equalsIgnoreCase(status)) {
+	            present++;
+	        }
+	        else if ("Absent".equalsIgnoreCase(status)) {
+	            absent++;
+	        }
+	        else if ("Half Day".equalsIgnoreCase(status)
+	                || "Half_Day".equalsIgnoreCase(status)
+	                || "HALF_DAY".equalsIgnoreCase(status)) {
+	            halfDay++;
+	        }
+	    }
+
+	    request.setAttribute("present", present);
+	    request.setAttribute("absent", absent);
+	    request.setAttribute("halfDay", halfDay);
+
+	    request.setAttribute("attendanceList", attendanceList);
+
+	    request.getRequestDispatcher(
+	            "attendanceHistory.jsp")
+	            .forward(request, response);
 	}
 }

@@ -458,7 +458,7 @@ footer {
 
 			<div>
 				<a href="addEmployee.jsp" class="btn-add-employee"> + Add NewEmployee </a> 
-				<a href="adminDashboard.jsp" class="btn-dashboard"> ←Back to Dashboard </a>
+				
 			</div>
 
 		</div>

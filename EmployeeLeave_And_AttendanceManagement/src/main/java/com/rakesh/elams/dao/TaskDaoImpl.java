@@ -33,7 +33,7 @@ public class TaskDaoImpl implements TaskDao {
 			ps.setString(2, task.getTaskName());
 			ps.setString(3, task.getDescription());
 			ps.setInt(4, task.getEmployeeId());
-			ps.setString(5, task.getManagerId());
+			ps.setInt(5, task.getManagerId());
 			ps.setString(6, task.getPriority().name());
 			ps.setString(7, task.getStatus().name());
 			ps.setDate(8, task.getAssignedDate());
@@ -214,8 +214,7 @@ public class TaskDaoImpl implements TaskDao {
 		task.setTaskName(rs.getString("task_name"));
 		task.setDescription(rs.getString("description"));
 		task.setEmployeeId(rs.getInt("employee_id"));
-		task.setManagerId(rs.getString("manager_id"));
-
+		task.setManagerId(rs.getInt("manager_id"));
 		task.setPriority(Priority.valueOf(rs.getString("priority")));
 
 		task.setStatus(Status.valueOf(rs.getString("status")));
@@ -226,105 +225,184 @@ public class TaskDaoImpl implements TaskDao {
 
 		task.setCompletionDate(rs.getDate("completion_date"));
 
-		// ADD THIS LINE
 		task.setDocumentPath(rs.getString("document_path"));
 
 		return task;
 	}
 
 	@Override
-	public int getTotalTasks() {
-		String sql = "SELECT COUNT(*) FROM tasks";
+	public int getTotalTasks(int managerId) {
 
-		try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+	    String sql =
+	            "SELECT COUNT(*) FROM tasks WHERE manager_id=?";
 
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
+	    try (
+	        PreparedStatement ps =
+	            conn.prepareStatement(sql)) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	        ps.setInt(1, managerId);
 
-		return 0;
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getInt(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return 0;
 	}
 
 	@Override
-	public int getCompletedTasks() {
-		String sql = "SELECT COUNT(*) FROM tasks WHERE status='COMPLETED'";
+	public List<Task> getTasksByManager(int managerId) {
 
-		try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+	    List<Task> tasks = new ArrayList<>();
 
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
+	    String sql =
+	            "SELECT * FROM tasks WHERE manager_id=?";
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	    try (PreparedStatement ps =
+	            conn.prepareStatement(sql)) {
 
-		return 0;
+	        ps.setInt(1, managerId);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            tasks.add(extractTask(rs));
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return tasks;
 	}
 
 	@Override
-	public int getPendingTasks() {
-		String sql = "SELECT COUNT(*) FROM tasks WHERE status='PENDING'";
+	public int getCompletedTasks(int managerId) {
 
-		try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+	    String sql =
+	        "SELECT COUNT(*) FROM tasks " +
+	        "WHERE manager_id=? AND status='COMPLETED'";
 
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
+	    try (
+	        PreparedStatement ps =
+	            conn.prepareStatement(sql)) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	        ps.setInt(1, managerId);
 
-		return 0;
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getInt(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return 0;
 	}
 
 	@Override
-	public int getInProgressTasks() {
-		String sql = "SELECT COUNT(*) FROM tasks WHERE status='IN_PROGRESS'";
+	public int getPendingTasks(int managerId) {
 
-		try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+	    String sql =
+	        "SELECT COUNT(*) FROM tasks " +
+	        "WHERE manager_id=? AND status='PENDING'";
 
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
+	    try (
+	        PreparedStatement ps =
+	            conn.prepareStatement(sql)) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	        ps.setInt(1, managerId);
 
-		return 0;
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getInt(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return 0;
 	}
 
 	@Override
-	public int getOverdueTasks() {
-		String sql = "SELECT COUNT(*) FROM tasks " + "WHERE due_date < CURDATE() " + "AND status <> 'COMPLETED'";
+	public int getInProgressTasks(int managerId) {
 
-		try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+	    String sql =
+	        "SELECT COUNT(*) FROM tasks " +
+	        "WHERE manager_id=? AND status='IN_PROGRESS'";
 
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
+	    try (
+	        PreparedStatement ps =
+	            conn.prepareStatement(sql)) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	        ps.setInt(1, managerId);
 
-		return 0;
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getInt(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return 0;
 	}
 
 	@Override
-	public List<Task> searchTasks(String taskId, Integer employeeId, String status, String priority) {
+	public int getOverdueTasks(int managerId) {
+
+	    String sql =
+	        "SELECT COUNT(*) FROM tasks " +
+	        "WHERE manager_id=? " +
+	        "AND due_date < CURDATE() " +
+	        "AND status!='COMPLETED'";
+
+	    try (
+	        PreparedStatement ps =
+	            conn.prepareStatement(sql)) {
+
+	        ps.setInt(1, managerId);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getInt(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return 0;
+	}
+
+	/**
+	 * Bug fix: this previously had NO managerId filter at all — its base
+	 * query was "SELECT * FROM tasks WHERE 1=1", meaning ANY manager who
+	 * used the search box could pull back tasks belonging to every other
+	 * manager in the system. It's now scoped with "WHERE manager_id=?"
+	 * just like getTasksByManager().
+	 */
+	@Override
+	public List<Task> searchTasks(int managerId, String taskId, Integer employeeId, String status, String priority) {
 
 		List<Task> tasks = new ArrayList<>();
 
-		StringBuilder sql = new StringBuilder("SELECT * FROM tasks WHERE 1=1 ");
+		StringBuilder sql = new StringBuilder("SELECT * FROM tasks WHERE manager_id=? ");
 
 		List<Object> params = new ArrayList<>();
+		params.add(managerId);
 
 		if (taskId != null && !taskId.isEmpty()) {
 			sql.append("AND task_id=? ");

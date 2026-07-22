@@ -11,51 +11,120 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    UserDao userDao = new UserDaoImpl();
+    private UserDao userDao;
 
     @Override
-    protected void doPost(HttpServletRequest request,
+    public void init() {
+        userDao = new UserDaoImpl();
+    }
+
+    @Override
+    protected void doPost(
+            HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        String email = request.getParameter("email");
+        request.setCharacterEncoding("UTF-8");
 
+        // Get form values
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String role = request.getParameter("role");
+
+        HttpSession session = request.getSession();
+
+        // ============================================
+        // VALIDATE INPUT
+        // ============================================
+
+        if (name == null || name.trim().isEmpty()
+                || email == null || email.trim().isEmpty()
+                || password == null || password.trim().isEmpty()
+                || role == null || role.trim().isEmpty()) {
+
+            session.setAttribute(
+                    "registerError",
+                    "All fields are required."
+            );
+
+            response.sendRedirect("register.jsp");
+            return;
+        }
+
+        // ============================================
+        // CREATE USER OBJECT
+        // ============================================
 
         User user = new User();
 
-        user.setEmail(email);
-
+        user.setName(name.trim());
+        user.setEmail(email.trim());
         user.setPwd(password);
+        user.setRole(role.trim().toUpperCase());
 
-        user.setRole("employee");
+        // ============================================
+        // CREATE EMPLOYEE + USER
+        // ============================================
 
-        boolean status = userDao.addUser(user);
+        /*
+         * This method inserts:
+         *
+         * 1. Employee details into employees table
+         * 2. Login details into user table
+         *
+         * Both operations happen in one transaction.
+         */
 
-        if (status) {
+        boolean success =
+                userDao.createUserAndEmployee(
+                        user,
+                        name.trim()
+                );
 
-            request.setAttribute("successMessage",
-                    "Registration Successful. Please Login.");
+        // ============================================
+        // SUCCESS
+        // ============================================
 
-            request.getRequestDispatcher("login.jsp")
-                    .forward(request, response);
+        if (success) {
 
-        } else {
+            session.setAttribute(
+                    "registerSuccess",
+                    "Account created successfully. Please login."
+            );
 
-            request.setAttribute("errorMessage",
-                    "Registration Failed.");
-
-            request.getRequestDispatcher("login.jsp")
-                    .forward(request, response);
+            response.sendRedirect("login.jsp");
 
         }
 
+        // ============================================
+        // FAILURE
+        // ============================================
+
+        else {
+
+            session.setAttribute(
+                    "registerError",
+                    "Unable to create account. Email may already exist."
+            );
+
+            response.sendRedirect("register.jsp");
+        }
     }
 
+    @Override
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.sendRedirect("register.jsp");
+    }
 }

@@ -11,14 +11,12 @@
 <title>Attendance History - ELAMS</title>
 
 <style>
-/* RESET - Remove default browser spacing */
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
 
-/* BODY - Main page styling */
 body {
 	font-family: Arial, sans-serif;
 	background-color: #f5f5f5;
@@ -26,7 +24,6 @@ body {
 	line-height: 1.6;
 }
 
-/* ===== HEADER/NAVBAR ===== */
 .navbar {
 	background-color: #2c3e50;
 	color: white;
@@ -40,14 +37,12 @@ body {
 	font-weight: bold;
 }
 
-/* ===== MAIN CONTAINER ===== */
 .container {
 	max-width: 1200px;
 	margin: 30px auto;
 	padding: 0 20px;
 }
 
-/* Page Title */
 .page-title {
 	font-size: 28px;
 	color: #2c3e50;
@@ -55,7 +50,6 @@ body {
 	text-align: center;
 }
 
-/* Page Subtitle */
 .page-subtitle {
 	font-size: 14px;
 	color: #7f8c8d;
@@ -63,7 +57,6 @@ body {
 	margin-bottom: 30px;
 }
 
-/* ===== SUMMARY CARDS SECTION ===== */
 .summary-cards {
 	display: flex;
 	flex-wrap: wrap;
@@ -72,13 +65,12 @@ body {
 	margin-bottom: 50px;
 }
 
-/* Summary Card */
 .summary-card {
 	background-color: white;
 	border: 2px solid #bdc3c7;
 	border-radius: 8px;
 	padding: 20px;
-	width: 200px;
+	width: 220px;
 	text-align: center;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	transition: all 0.3s;
@@ -89,7 +81,6 @@ body {
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Card left border colors */
 .summary-card.present {
 	border-left: 5px solid #27ae60;
 }
@@ -102,7 +93,6 @@ body {
 	border-left: 5px solid #f39c12;
 }
 
-/* Summary Card Title */
 .summary-card h3 {
 	font-size: 13px;
 	color: #7f8c8d;
@@ -112,14 +102,12 @@ body {
 	font-weight: 600;
 }
 
-/* Summary Card Number */
 .summary-card .count {
 	font-size: 36px;
 	font-weight: bold;
 	color: #2c3e50;
 }
 
-/* ===== TABLE SECTION ===== */
 .table-section {
 	background-color: white;
 	border: 2px solid #bdc3c7;
@@ -137,14 +125,12 @@ body {
 	padding-bottom: 10px;
 }
 
-/* Table Styling */
 table {
 	width: 100%;
 	border-collapse: collapse;
 	margin-bottom: 20px;
 }
 
-/* Table Header */
 table thead {
 	background-color: #34495e;
 	color: white;
@@ -160,28 +146,20 @@ table th {
 	border: 1px solid #bdc3c7;
 }
 
-/* Table Body */
 table td {
 	padding: 12px 15px;
 	border: 1px solid #ecf0f1;
 	font-size: 14px;
 }
 
-/* Table Row */
-table tbody tr {
-	transition: background-color 0.3s;
-}
-
 table tbody tr:hover {
 	background-color: #f9f9f9;
 }
 
-/* Alternate Row Colors */
 table tbody tr:nth-child(even) {
 	background-color: #f5f5f5;
 }
 
-/* Status Badge Styling */
 .status-badge {
 	display: inline-block;
 	padding: 5px 12px;
@@ -206,7 +184,6 @@ table tbody tr:nth-child(even) {
 	color: #856404;
 }
 
-/* ===== NO DATA MESSAGE ===== */
 .no-data {
 	text-align: center;
 	padding: 40px 20px;
@@ -219,14 +196,12 @@ table tbody tr:nth-child(even) {
 	margin-bottom: 15px;
 }
 
-/* ===== DIVIDER ===== */
 .divider {
 	margin: 40px 0;
 	border: none;
 	border-top: 2px solid #bdc3c7;
 }
 
-/* ===== ACTION BUTTONS ===== */
 .action-buttons {
 	display: flex;
 	gap: 10px;
@@ -242,7 +217,6 @@ table tbody tr:nth-child(even) {
 	font-size: 14px;
 	font-weight: bold;
 	cursor: pointer;
-	transition: all 0.3s;
 	text-decoration: none;
 	display: inline-block;
 }
@@ -256,16 +230,6 @@ table tbody tr:nth-child(even) {
 	background-color: #2980b9;
 }
 
-.btn-secondary {
-	background-color: #95a5a6;
-	color: white;
-}
-
-.btn-secondary:hover {
-	background-color: #7f8c8d;
-}
-
-/* ===== INFO BOX ===== */
 .info-box {
 	background-color: #ecf0f1;
 	border-left: 4px solid #3498db;
@@ -276,7 +240,6 @@ table tbody tr:nth-child(even) {
 	color: #2c3e50;
 }
 
-/* ===== FOOTER ===== */
 footer {
 	background-color: #2c3e50;
 	color: white;
@@ -286,39 +249,38 @@ footer {
 	font-size: 12px;
 }
 
-/* ===== RESPONSIVE DESIGN FOR MOBILE ===== */
-@media ( max-width : 768px) {
+@media (max-width:768px) {
+
 	.container {
 		margin: 20px auto;
 	}
+
 	.page-title {
 		font-size: 22px;
 	}
+
 	.summary-cards {
 		flex-direction: column;
 		align-items: center;
 	}
+
 	.summary-card {
 		width: 100%;
 		max-width: 300px;
 	}
+
 	.table-section {
 		padding: 15px;
-		overflow-x: auto;
 	}
-	table {
-		font-size: 12px;
-	}
+
 	table th, table td {
 		padding: 8px 10px;
 	}
-	.status-badge {
-		font-size: 10px;
-		padding: 4px 8px;
-	}
+
 	.action-buttons {
 		flex-direction: column;
 	}
+
 	.btn {
 		width: 100%;
 	}
@@ -329,148 +291,174 @@ footer {
 
 <body>
 
-	<!-- ===== HEADER/NAVIGATION ===== -->
 	<div class="navbar">
 		<h1>ELAMS - Attendance History</h1>
 	</div>
 
-	<!-- ===== MAIN CONTENT AREA ===== -->
 	<div class="container">
 
-		<!-- Page Title -->
 		<h2 class="page-title">Your Attendance History</h2>
 
-		<!-- Page Subtitle -->
-		<p class="page-subtitle">View your complete attendance records and
-			statistics</p>
+		<p class="page-subtitle">
+			View your complete attendance records and statistics
+		</p>
 
-		<!-- Info Box -->
 		<div class="info-box">
-			<strong>ℹ️ Note:</strong> This page shows all your attendance
-			records. You can view detailed information about check-in times,
-			check-out times, and your attendance status for each day.
+			<strong>Note:</strong> This page shows all your attendance
+			records along with working hours and attendance status.
 		</div>
 
-		<!-- ===== ATTENDANCE SUMMARY CARDS ===== -->
 		<div class="summary-cards">
 
-			<!-- Present Count Card -->
 			<div class="summary-card present">
 				<h3>Days Present</h3>
 				<div class="count">
-					<%
-					Object presentCount = request.getAttribute("present");
-					out.print(presentCount != null ? presentCount : "0");
-					%>
+					<%= request.getAttribute("present") != null ? request.getAttribute("present") : "0" %>
 				</div>
 			</div>
 
-			<!-- Absent Count Card -->
 			<div class="summary-card absent">
 				<h3>Days Absent</h3>
 				<div class="count">
-					<%
-					Object absentCount = request.getAttribute("absent");
-					out.print(absentCount != null ? absentCount : "0");
-					%>
+					<%= request.getAttribute("absent") != null ? request.getAttribute("absent") : "0" %>
 				</div>
 			</div>
 
-			<!-- Half Day Count Card -->
 			<div class="summary-card half-day">
 				<h3>Half Days</h3>
 				<div class="count">
-					<%
-					Object halfDayCount = request.getAttribute("halfDay");
-					out.print(halfDayCount != null ? halfDayCount : "0");
-					%>
+					<%= request.getAttribute("halfDay") != null ? request.getAttribute("halfDay") : "0" %>
 				</div>
 			</div>
 
 		</div>
 
-		<!-- ===== ACTION BUTTONS ===== -->
 		<div class="action-buttons">
-			<a href="attendance.jsp" class="btn btn-primary">Mark Today's
-				Attendance</a>
-			<%
-			String role = (String) session.getAttribute("role");
-
-			String dashboardUrl = "login.jsp";
-
-			if ("admin".equalsIgnoreCase(role)) {
-				dashboardUrl = "adminDashboardServlet";
-			} else if ("employee".equalsIgnoreCase(role)) {
-				dashboardUrl = "employeeDashboardServlet";
-			}
-			%>
-
-			<a href="<%=dashboardUrl%>" class="btn btn-secondary"> ← Back
-				to Dashboard </a>
+			<a href="attendance.jsp" class="btn btn-primary">
+				Back to Attendance
+			</a>
 		</div>
 
-		<!-- Divider -->
 		<hr class="divider">
 
-		<!-- ===== ATTENDANCE RECORDS TABLE ===== -->
 		<div class="table-section">
-			<h2>📋 Detailed Attendance Records</h2>
+
+			<h2>Attendance Records</h2>
 
 			<%
-			List<Attendance> attendanceList = (List<Attendance>) request.getAttribute("attendanceList");
+			List<Attendance> attendanceList =
+					(List<Attendance>) request.getAttribute("attendanceList");
 
 			if (attendanceList != null && !attendanceList.isEmpty()) {
 			%>
 
-			<!-- Attendance Table -->
 			<table>
+
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th>Employee ID</th>
 						<th>Date</th>
 						<th>Check In</th>
 						<th>Check Out</th>
 						<th>Status</th>
+						<th>Working Hours</th>
 					</tr>
 				</thead>
-				<tbody>
-					<%
-					for (Attendance attendance : attendanceList) {
-						String statusClass = "";
-						String status = attendance.getStatus();
 
-						if ("Present".equals(status)) {
-							statusClass = "status-present";
-						} else if ("Absent".equals(status)) {
-							statusClass = "status-absent";
-						} else if ("Half Day".equals(status)) {
-							statusClass = "status-half-day";
-						}
-					%>
-					<tr>
-						<td><strong><%=attendance.getAttendance_id()%></strong></td>
-						<td><%=attendance.getEmployee_id()%></td>
-						<td><strong><%=attendance.getAttendance_date()%></strong></td>
-						<td><%=attendance.getCheck_in_time()%></td>
-						<td><%=attendance.getCheck_out_time()%></td>
-						<td><span class="status-badge <%=statusClass%>"> <%=status%>
-						</span></td>
-					</tr>
+				<tbody>
+
+				<%
+				for (Attendance attendance : attendanceList) {
+
+					String statusClass = "";
+					String status = attendance.getStatus();
+
+					if ("PRESENT".equalsIgnoreCase(status)
+							|| "LATE".equalsIgnoreCase(status)) {
+
+						statusClass = "status-present";
+
+					} else if ("ABSENT".equalsIgnoreCase(status)) {
+
+						statusClass = "status-absent";
+
+					} else if ("HALF_DAY".equalsIgnoreCase(status)) {
+
+						statusClass = "status-half-day";
+					}
+				%>
+
+				<tr>
+
+					<td>
+						<strong><%=attendance.getAttendance_id()%></strong>
+					</td>
+
+					<td>
+						<strong><%=attendance.getAttendance_date()%></strong>
+					</td>
+
+					<td>
+						<%=attendance.getCheck_in_time() != null
+							? attendance.getCheck_in_time()
+							: "--"%>
+					</td>
+
+					<td>
+						<%=attendance.getCheck_out_time() != null
+							? attendance.getCheck_out_time()
+							: "--"%>
+					</td>
+
+					<td>
+						<span class="status-badge <%=statusClass%>">
+							<%=status%>
+						</span>
+					</td>
+
+					<td>
+
 					<%
+					if (attendance.getCheck_in_time() != null &&
+						attendance.getCheck_out_time() != null) {
+
+						long diff =
+								attendance.getCheck_out_time().getTime()
+								-
+								attendance.getCheck_in_time().getTime();
+
+						long hours = diff / (1000 * 60 * 60);
+
+						long minutes =
+								(diff / (1000 * 60)) % 60;
+
+						out.print(hours + "h " + minutes + "m");
+
+					} else {
+
+						out.print("--");
 					}
 					%>
+
+					</td>
+
+				</tr>
+
+				<%
+				}
+				%>
+
 				</tbody>
+
 			</table>
 
 			<%
 			} else {
 			%>
 
-			<!-- No Data Message -->
 			<div class="no-data">
 				<div class="no-data-icon">📭</div>
-				<p>No attendance records found. Start marking your attendance!</p>
+				<p>No attendance records found.</p>
 			</div>
 
 			<%
@@ -481,30 +469,11 @@ footer {
 
 	</div>
 
-	<!-- ===== FOOTER ===== -->
 	<footer>
-		<p>&copy; 2024 ELAMS - Employee Leave & Attendance Management
-			System. All rights reserved.</p>
+		<p>
+			&copy; 2026 ELAMS - Employee Leave & Attendance Management System
+		</p>
 	</footer>
 
-	<!-- ===== PRINT FUNCTIONALITY ===== -->
-	<script>
-		// Allow users to print attendance history
-		function printAttendance() {
-			window.print();
-		}
-
-		// Show/Hide table on button click
-		function toggleTableDetails() {
-			var table = document.querySelector('table');
-			if (table.style.display === 'none') {
-				table.style.display = 'table';
-			} else {
-				table.style.display = 'none';
-			}
-		}
-	</script>
-
 </body>
-
 </html>

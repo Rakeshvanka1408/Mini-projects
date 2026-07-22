@@ -1,29 +1,80 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
+<%@ page import="java.util.List"%>
+<%@ page import="com.rakesh.elams.model.Employee"%>
+<%@ page import="com.rakesh.elams.dao.EmployeeDao"%>
+<%@ page import="com.rakesh.elams.dao.EmployeeDaoImpl"%>
+
+<%
+/*
+ * ============================================================
+ * LOAD ALL MANAGERS
+ * ============================================================
+ *
+ * The Manager dropdown is populated from employees who have
+ * the MANAGER role in the user table.
+ *
+ * EmployeeDaoImpl.getAllManagers() returns:
+ *
+ * employee_id
+ * employee_name
+ * email
+ *
+ * The selected employee_id is submitted as managerId.
+ *
+ * ============================================================
+ */
+
+EmployeeDao employeeDao = new EmployeeDaoImpl();
+
+List<Employee> managers = employeeDao.getAllManagers();
+
+/*
+ * ============================================================
+ * GET SUCCESS / ERROR MESSAGES
+ * ============================================================
+ */
+
+String successMessage = (String) request.getAttribute("successMessage");
+String errorMessage = (String) request.getAttribute("errorMessage");
+%>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Add Employee - ELAMS</title>
 
+
 <style>
-/* RESET - Remove default browser spacing */
+
+/* ============================================================
+   RESET
+   ============================================================ */
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
 
-/* BODY - Main page styling */
+/* ============================================================
+   BODY
+   ============================================================ */
 body {
 	font-family: Arial, sans-serif;
 	background-color: #f5f5f5;
 	color: #333;
 }
 
-/* ===== HEADER/NAVBAR ===== */
+/* ============================================================
+   HEADER / NAVBAR
+   ============================================================ */
 .navbar {
 	background-color: #2c3e50;
 	color: white;
@@ -37,14 +88,18 @@ body {
 	font-weight: bold;
 }
 
-/* ===== MAIN CONTAINER ===== */
+/* ============================================================
+   MAIN CONTAINER
+   ============================================================ */
 .container {
 	max-width: 600px;
 	margin: 30px auto;
 	padding: 0 20px;
 }
 
-/* Page Title */
+/* ============================================================
+   PAGE TITLE
+   ============================================================ */
 .page-title {
 	font-size: 28px;
 	color: #2c3e50;
@@ -52,7 +107,9 @@ body {
 	text-align: center;
 }
 
-/* Page Subtitle */
+/* ============================================================
+   PAGE SUBTITLE
+   ============================================================ */
 .page-subtitle {
 	font-size: 14px;
 	color: #7f8c8d;
@@ -60,9 +117,9 @@ body {
 	margin-bottom: 30px;
 }
 
-/* ===== FORM STYLING ===== */
-
-/* Form Container */
+/* ============================================================
+   FORM CONTAINER
+   ============================================================ */
 .form-container {
 	background-color: white;
 	border: 2px solid #bdc3c7;
@@ -71,17 +128,20 @@ body {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Group - Each field wrapper */
+/* ============================================================
+   FORM GROUP
+   ============================================================ */
 .form-group {
 	margin-bottom: 20px;
 }
 
-/* Form Group - Last item has no bottom margin */
 .form-group:last-of-type {
 	margin-bottom: 25px;
 }
 
-/* Label Styling */
+/* ============================================================
+   LABEL
+   ============================================================ */
 .form-group label {
 	display: block;
 	font-weight: bold;
@@ -90,12 +150,16 @@ body {
 	font-size: 14px;
 }
 
-/* Required field indicator */
+/* ============================================================
+   REQUIRED FIELD
+   ============================================================ */
 .form-group label .required {
 	color: #e74c3c;
 }
 
-/* Input Fields Styling */
+/* ============================================================
+   INPUTS AND SELECT
+   ============================================================ */
 .form-group input[type="text"], .form-group input[type="email"],
 	.form-group input[type="tel"], .form-group select {
 	width: 100%;
@@ -105,9 +169,12 @@ body {
 	font-size: 14px;
 	font-family: Arial, sans-serif;
 	transition: all 0.3s;
+	background-color: white;
 }
 
-/* Input Focus Effect */
+/* ============================================================
+   INPUT FOCUS
+   ============================================================ */
 .form-group input[type="text"]:focus, .form-group input[type="email"]:focus,
 	.form-group input[type="tel"]:focus, .form-group select:focus {
 	outline: none;
@@ -116,19 +183,25 @@ body {
 	background-color: #f9f9f9;
 }
 
-/* Input Placeholder */
+/* ============================================================
+   PLACEHOLDER
+   ============================================================ */
 .form-group input::placeholder {
 	color: #95a5a6;
 }
 
-/* Buttons Container */
+/* ============================================================
+   BUTTON GROUP
+   ============================================================ */
 .button-group {
 	display: flex;
 	gap: 10px;
 	justify-content: center;
 }
 
-/* Submit Button */
+/* ============================================================
+   SUBMIT BUTTON
+   ============================================================ */
 .btn-submit {
 	background-color: #27ae60;
 	color: white;
@@ -143,19 +216,19 @@ body {
 	max-width: 150px;
 }
 
-/* Submit Button Hover Effect */
 .btn-submit:hover {
 	background-color: #229954;
 	transform: translateY(-2px);
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Submit Button Active Effect */
 .btn-submit:active {
 	transform: translateY(0);
 }
 
-/* Reset Button */
+/* ============================================================
+   RESET BUTTON
+   ============================================================ */
 .btn-reset {
 	background-color: #95a5a6;
 	color: white;
@@ -170,14 +243,15 @@ body {
 	max-width: 150px;
 }
 
-/* Reset Button Hover Effect */
 .btn-reset:hover {
 	background-color: #7f8c8d;
 	transform: translateY(-2px);
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Back Link */
+/* ============================================================
+   BACK LINK
+   ============================================================ */
 .back-link {
 	display: inline-block;
 	margin-top: 20px;
@@ -192,7 +266,9 @@ body {
 	text-decoration: underline;
 }
 
-/* ===== INFO BOX ===== */
+/* ============================================================
+   INFO BOX
+   ============================================================ */
 .info-box {
 	background-color: #ecf0f1;
 	border-left: 4px solid #3498db;
@@ -203,7 +279,9 @@ body {
 	color: #2c3e50;
 }
 
-/* ===== ERROR/SUCCESS MESSAGES ===== */
+/* ============================================================
+   SUCCESS / ERROR MESSAGES
+   ============================================================ */
 .alert {
 	padding: 12px 15px;
 	border-radius: 4px;
@@ -223,7 +301,9 @@ body {
 	color: #721c24;
 }
 
-/* ===== FOOTER ===== */
+/* ============================================================
+   FOOTER
+   ============================================================ */
 footer {
 	background-color: #2c3e50;
 	color: white;
@@ -233,7 +313,9 @@ footer {
 	font-size: 12px;
 }
 
-/* ===== RESPONSIVE DESIGN FOR MOBILE ===== */
+/* ============================================================
+   RESPONSIVE DESIGN
+   ============================================================ */
 @media ( max-width : 768px) {
 	.container {
 		margin: 20px auto;
@@ -256,212 +338,498 @@ footer {
 
 </head>
 
+
 <body>
 
-	<!-- ===== HEADER/NAVIGATION ===== -->
+
+	<!-- ============================================================
+     HEADER
+     ============================================================ -->
+
 	<div class="navbar">
+
 		<h1>ELAMS - Add Employee</h1>
+
 	</div>
 
-	<!-- ===== MAIN CONTENT AREA ===== -->
+
+	<!-- ============================================================
+     MAIN CONTENT
+     ============================================================ -->
+
 	<div class="container">
 
-		<!-- Page Title -->
+
 		<h2 class="page-title">Add New Employee</h2>
 
-		<!-- Page Subtitle -->
+
 		<p class="page-subtitle">Fill in the form below to add a new
 			employee to the system</p>
 
-		<!-- Info Box -->
+
+		<!-- ========================================================
+	     INFO BOX
+	     ======================================================== -->
+
 		<div class="info-box">
+
 			<strong>ℹ️ Note:</strong> All fields marked with <span
 				style="color: #e74c3c;">*</span> are required. Please ensure all
 			information is accurate.
+
 		</div>
 
-		<!-- Display Success Message if any -->
+
+		<!-- ========================================================
+	     SUCCESS MESSAGE
+	     ======================================================== -->
+
 		<%
-		String successMessage = (String) request.getAttribute("successMessage");
 		if (successMessage != null && !successMessage.isEmpty()) {
 		%>
+
 		<div class="alert alert-success">
+
 			✓
+
 			<%=successMessage%>
+
 		</div>
+
 		<%
 		}
 		%>
 
-		<!-- Display Error Message if any -->
+
+		<!-- ========================================================
+	     ERROR MESSAGE
+	     ======================================================== -->
+
 		<%
-		String errorMessage = (String) request.getAttribute("errorMessage");
 		if (errorMessage != null && !errorMessage.isEmpty()) {
 		%>
+
 		<div class="alert alert-error">
+
 			✕
+
 			<%=errorMessage%>
+
 		</div>
+
 		<%
 		}
 		%>
 
-		<!-- ===== ADD EMPLOYEE FORM ===== -->
+
+		<!-- ========================================================
+	     ADD EMPLOYEE FORM
+	     ======================================================== -->
+
 		<div class="form-container">
+
+
 			<form action="addEmployee" method="post"
 				onsubmit="return validateForm()">
 
-				<!-- Name Field -->
+
+				<!-- ==================================================
+			     EMPLOYEE NAME
+			     ================================================== -->
+
 				<div class="form-group">
+
 					<label for="name"> Employee Name <span class="required">*</span>
+
 					</label> <input type="text" id="name" name="name"
 						placeholder="Enter full name (e.g., John Doe)" required
 						pattern="[A-Za-z\s]{2,50}"
 						title="Name must contain only letters and be 2-50 characters">
+
 				</div>
 
-				<!-- Email Field -->
+
+				<!-- ==================================================
+			     EMAIL
+			     ================================================== -->
+
 				<div class="form-group">
+
 					<label for="email"> Email Address <span class="required">*</span>
+
 					</label> <input type="email" id="email" name="email"
 						placeholder="Enter email address (e.g., john@example.com)"
 						required title="Please enter a valid email address">
+
 				</div>
 
-				<!-- Phone Field -->
+
+				<!-- ==================================================
+			     PHONE
+			     ================================================== -->
+
 				<div class="form-group">
+
 					<label for="phone"> Phone Number <span class="required">*</span>
+
 					</label> <input type="tel" id="phone" name="phone"
 						placeholder="Enter phone number (e.g., 9876543210)" required
 						pattern="[0-9\-\+\s]{10,15}" title="Phone must be 10-15 digits">
+
 				</div>
 
-				<!-- Department Field -->
+
+				<!-- ==================================================
+			     DEPARTMENT
+			     ================================================== -->
+
 				<div class="form-group">
+
 					<label for="department"> Department <span class="required">*</span>
+
 					</label> <select id="department" name="department" required
 						title="Please select a department">
+
 						<option value="">-- Select Department --</option>
+
 						<option value="IT">Information Technology (IT)</option>
+
 						<option value="HR">Human Resources (HR)</option>
+
 						<option value="Finance">Finance</option>
+
 						<option value="Sales">Sales</option>
+
 						<option value="Marketing">Marketing</option>
+
 						<option value="Operations">Operations</option>
+
 						<option value="Other">Other</option>
+
 					</select>
+
 				</div>
 
-				<!-- Designation Field -->
+
+				<!-- ==================================================
+			     DESIGNATION
+			     ================================================== -->
+
 				<div class="form-group">
+
 					<label for="designation"> Designation <span
 						class="required">*</span>
+
 					</label> <select id="designation" name="designation" required
 						title="Please select a designation">
+
 						<option value="">-- Select Designation --</option>
+
 						<option value="Manager">Manager</option>
+
 						<option value="Senior Developer">Senior Developer</option>
+
 						<option value="Developer">Developer</option>
+
 						<option value="Junior Developer">Junior Developer</option>
+
 						<option value="Analyst">Analyst</option>
+
 						<option value="Executive">Executive</option>
+
 						<option value="Intern">Intern</option>
+
 						<option value="Other">Other</option>
+
 					</select>
+
 				</div>
 
-				<!-- Buttons -->
-				<div class="button-group">
-					<button type="submit" class="btn-submit">Save Employee</button>
-					<button type="reset" class="btn-reset">Clear Form</button>
+
+				<!-- ==================================================
+			     MANAGER DROPDOWN
+			     ================================================== -->
+
+				<div class="form-group">
+
+					<label for="managerId"> Assign Manager <span
+						class="required">*</span>
+
+					</label> <select id="managerId" name="managerId" required
+						title="Please select a manager">
+
+						<option value="">-- Select Manager --</option>
+
+
+						<%
+						if (managers != null && !managers.isEmpty()) {
+
+							for (Employee manager : managers) {
+						%>
+
+
+						<option value="<%=manager.getEmployee_id()%>">
+
+							<%=manager.getEmployee_name()%> (ID:
+							<%=manager.getEmployee_id()%>)
+
+						</option>
+
+
+						<%
+						}
+
+						} else {
+						%>
+
+
+						<option value="" disabled>No managers available</option>
+
+
+						<%
+						}
+						%>
+
+					</select>
+
 				</div>
+
+
+				<!-- ==================================================
+			     BUTTONS
+			     ================================================== -->
+
+				<div class="button-group">
+
+
+					<button type="submit" class="btn-submit">Save Employee</button>
+
+
+					<button type="reset" class="btn-reset">Clear Form</button>
+
+
+				</div>
+
 
 			</form>
+
 		</div>
 
-		<!-- Back Link -->
-		<a href="viewEmployeesServlet" class="back-link">← Back to
-			Employees List</a>
+
+		<!-- ========================================================
+	     BACK LINK
+	     ======================================================== -->
+
+		<a href="viewEmployeesServlet" class="back-link"> ← Back to
+			Employees List </a>
+
 
 	</div>
 
-	<!-- ===== FOOTER ===== -->
+
+	<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+
 	<footer>
+
 		<p>&copy; 2024 ELAMS - Employee Leave & Attendance Management
 			System. All rights reserved.</p>
+
 	</footer>
 
-	<!-- ===== JAVASCRIPT VALIDATION ===== -->
+
+	<!-- ============================================================
+     JAVASCRIPT VALIDATION
+     ============================================================ -->
+
 	<script>
-		// Validate form before submission
-		function validateForm() {
-			// Get form values
-			var name = document.getElementById("name").value.trim();
-			var email = document.getElementById("email").value.trim();
-			var phone = document.getElementById("phone").value.trim();
-			var department = document.getElementById("department").value;
-			var designation = document.getElementById("designation").value;
 
-			// Check if name is valid
-			if (name.length < 2 || name.length > 50) {
-				alert("Name must be between 2 and 50 characters");
-				document.getElementById("name").focus();
-				return false;
+function validateForm() {
+
+	var name =
+		document.getElementById("name").value.trim();
+
+	var email =
+		document.getElementById("email").value.trim();
+
+	var phone =
+		document.getElementById("phone").value.trim();
+
+	var department =
+		document.getElementById("department").value;
+
+	var designation =
+		document.getElementById("designation").value;
+
+	var managerId =
+		document.getElementById("managerId").value;
+
+
+	/* ========================================================
+	   NAME VALIDATION
+	   ======================================================== */
+
+	if (name.length < 2 || name.length > 50) {
+
+		alert(
+			"Name must be between 2 and 50 characters"
+		);
+
+		document.getElementById("name").focus();
+
+		return false;
+	}
+
+
+	if (!/^[A-Za-z\s]+$/.test(name)) {
+
+		alert(
+			"Name must contain only letters and spaces"
+		);
+
+		document.getElementById("name").focus();
+
+		return false;
+	}
+
+
+	/* ========================================================
+	   EMAIL VALIDATION
+	   ======================================================== */
+
+	var emailRegex =
+		/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+	if (!emailRegex.test(email)) {
+
+		alert(
+			"Please enter a valid email address"
+		);
+
+		document.getElementById("email").focus();
+
+		return false;
+	}
+
+
+	/* ========================================================
+	   PHONE VALIDATION
+	   ======================================================== */
+
+	var phoneRegex =
+		/^[0-9\-\+\s]{10,15}$/;
+
+
+	if (!phoneRegex.test(phone)) {
+
+		alert(
+			"Phone must be 10-15 digits"
+		);
+
+		document.getElementById("phone").focus();
+
+		return false;
+	}
+
+
+	/* ========================================================
+	   DEPARTMENT VALIDATION
+	   ======================================================== */
+
+	if (department === "" || department === null) {
+
+		alert(
+			"Please select a department"
+		);
+
+		document.getElementById("department").focus();
+
+		return false;
+	}
+
+
+	/* ========================================================
+	   DESIGNATION VALIDATION
+	   ======================================================== */
+
+	if (designation === "" || designation === null) {
+
+		alert(
+			"Please select a designation"
+		);
+
+		document.getElementById("designation").focus();
+
+		return false;
+	}
+
+
+	/* ========================================================
+	   MANAGER VALIDATION
+	   ======================================================== */
+
+	if (managerId === "" || managerId === null) {
+
+		alert(
+			"Please select a manager"
+		);
+
+		document.getElementById("managerId").focus();
+
+		return false;
+	}
+
+
+	/* ========================================================
+	   ALL VALIDATIONS PASSED
+	   ======================================================== */
+
+	return true;
+
+}
+
+
+/* ============================================================
+   INPUT FOCUS VISUAL FEEDBACK
+   ============================================================ */
+
+var inputElements =
+	document.querySelectorAll(
+		"input, select"
+	);
+
+
+inputElements.forEach(
+	function(element) {
+
+		element.addEventListener(
+			"focus",
+			function() {
+
+				this.style.borderColor =
+					"#3498db";
+
 			}
+		);
 
-			// Check if name contains only letters and spaces
-			if (!/^[A-Za-z\s]+$/.test(name)) {
-				alert("Name must contain only letters and spaces");
-				document.getElementById("name").focus();
-				return false;
+
+		element.addEventListener(
+			"blur",
+			function() {
+
+				this.style.borderColor =
+					"#bdc3c7";
+
 			}
+		);
 
-			// Check if email is valid
-			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailRegex.test(email)) {
-				alert("Please enter a valid email address");
-				document.getElementById("email").focus();
-				return false;
-			}
+	}
+);
 
-			// Check if phone is valid
-			var phoneRegex = /^[0-9\-\+\s]{10,15}$/;
-			if (!phoneRegex.test(phone)) {
-				alert("Phone must be 10-15 digits");
-				document.getElementById("phone").focus();
-				return false;
-			}
+</script>
 
-			// Check if department is selected
-			if (department === "" || department === null) {
-				alert("Please select a department");
-				document.getElementById("department").focus();
-				return false;
-			}
-
-			// Check if designation is selected
-			if (designation === "" || designation === null) {
-				alert("Please select a designation");
-				document.getElementById("designation").focus();
-				return false;
-			}
-
-			// All validations passed
-			return true;
-		}
-
-		// Show visual feedback on input focus
-		var inputElements = document.querySelectorAll("input, select");
-		inputElements.forEach(function(element) {
-			element.addEventListener("focus", function() {
-				this.style.borderColor = "#3498db";
-			});
-
-			element.addEventListener("blur", function() {
-				this.style.borderColor = "#bdc3c7";
-			});
-		});
-	</script>
 
 </body>
 

@@ -13,92 +13,88 @@ import com.rakesh.elams.util.DbUtil;
 public class AttendanceDaoImpl implements AttendanceDao {
 
 	@Override
-	public boolean markAttendance(Attendance attendance) {
-		String sqll = "INSERT INTO attendance(attendance_id,employee_id,attendance_date,check_in,check_out,status) VALUES(?,?,?,?,?,?)";
-		try {
-			Connection conn = DbUtil.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sqll);
-			ps.setInt(1, attendance.getAttendance_id());
-			ps.setInt(2, attendance.getEmployee_id());
-			ps.setDate(3, attendance.getAttendance_date());
-			ps.setTime(4, attendance.getCheck_in_time());
-			ps.setTime(5, attendance.getCheck_out_time());
-			ps.setString(6, attendance.getStatus());
-			int count = ps.executeUpdate();
-			return count > 0;
+	public boolean checkIn(Attendance attendance) {
+
+		String sql = "INSERT INTO attendance " + "(employee_id, attendance_date, check_in, status) "
+				+ "VALUES (?, CURDATE(), CURTIME(), ?)";
+
+		try (Connection conn = DbUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setInt(1, attendance.getEmployee_id());
+			ps.setString(2, attendance.getStatus());
+
+			return ps.executeUpdate() > 0;
+
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
+
 		return false;
 	}
 
 	@Override
-	public boolean updateAttendance(Attendance attendance) {
-		String sql = "update attendance set attendance_id=?, employee_id=? , attendance_date=?, check_in=?,check_out=?,status=? where where attendance_id=?";
-		try {
-			Connection conn = DbUtil.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, attendance.getAttendance_id());
-			ps.setInt(2, attendance.getAttendance_id());
-			ps.setDate(3, attendance.getAttendance_date());
-			ps.setTime(4, attendance.getCheck_in_time());
-			ps.setTime(5, attendance.getCheck_out_time());
-			ps.setString(6, attendance.getStatus());
-			int count = ps.executeUpdate();
-			return count > 0;
+	public boolean checkOut(int employeeId) {
+
+		String sql = "UPDATE attendance " + "SET check_out = CURTIME() " + "WHERE employee_id=? "
+				+ "AND attendance_date=CURDATE()";
+
+		try (Connection conn = DbUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setInt(1, employeeId);
+
+			return ps.executeUpdate() > 0;
+
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
+
 		return false;
 	}
 
 	@Override
-	public boolean deleteAttendance(int attendanceId) {
-		String sql = "delete from attendance where attendance_id=?";
-		try {
-			Connection conn = DbUtil.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, attendanceId);
-			int executeUpdate = ps.executeUpdate();
-			return executeUpdate > 0;
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return false;
-	}
+	public Attendance getTodayAttendance(int employeeId) {
 
-	@Override
-	public Attendance getAttendanceById(int attendanceId) {
 		Attendance attendance = null;
-		String sql = "SELECT * FROM attendance WHERE attendance_id=?";
 
-		try (Connection con = DbUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+		String sql = "SELECT * FROM attendance " + "WHERE employee_id=? " + "AND attendance_date=CURDATE()";
 
-			ps.setInt(1, attendanceId);
+		try (Connection conn = DbUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setInt(1, employeeId);
 
 			ResultSet rs = ps.executeQuery();
-
 			if (rs.next()) {
 
-				attendance = new Attendance(rs.getInt("attendance_id"), rs.getDate("attendance_date"),
-						rs.getTime("check_in"), rs.getTime("check_out"), rs.getString("status"),
-						rs.getInt("employee_id"));
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return attendance;
+				attendance = new Attendance();
 
+				attendance.setAttendance_id(rs.getInt("attendance_id"));
+
+				attendance.setEmployee_id(rs.getInt("employee_id"));
+
+				attendance.setAttendance_date(rs.getDate("attendance_date"));
+
+				attendance.setCheck_in_time(rs.getTime("check_in"));
+
+				attendance.setCheck_out_time(rs.getTime("check_out"));
+
+				attendance.setStatus(rs.getString("status"));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return attendance;
 	}
 
 	@Override
 	public List<Attendance> getAttendanceByEmployee(int employeeId) {
 
-		List<Attendance> attendanceList = new ArrayList<>();
+		List<Attendance> list = new ArrayList<>();
 
-		String sql = "SELECT * FROM attendance WHERE employee_id=? ORDER BY attendance_date DESC";
+		String sql = "SELECT * FROM attendance " + "WHERE employee_id=? " + "ORDER BY attendance_date DESC";
 
-		try (Connection con = DbUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection conn = DbUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setInt(1, employeeId);
 
@@ -116,135 +112,254 @@ public class AttendanceDaoImpl implements AttendanceDao {
 
 				attendance.setCheck_in_time(rs.getTime("check_in"));
 
-				attendance.setCheck_in_time(rs.getTime("check_out"));
-
+				attendance.setCheck_out_time(rs.getTime("check_out"));
 				attendance.setStatus(rs.getString("status"));
-
-				attendanceList.add(attendance);
+				list.add(attendance);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return attendanceList;
+		return list;
 	}
 
 	@Override
-	public List<Attendance> getAttendanceByDate(Date attendanceDate) {
+	public boolean hasCheckedInToday(int employeeId) {
 
-		List<Attendance> attendanceList = new ArrayList<>();
+		String sql = "SELECT attendance_id " + "FROM attendance " + "WHERE employee_id=? "
+				+ "AND attendance_date=CURDATE()";
 
-		String sql = "SELECT * FROM attendance WHERE attendance_date=?";
+		try (Connection conn = DbUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-		try (Connection con = DbUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-
-			ps.setDate(1, attendanceDate);
+			ps.setInt(1, employeeId);
 
 			ResultSet rs = ps.executeQuery();
 
-			while (rs.next()) {
-
-				Attendance attendance = new Attendance();
-
-				attendance.setAttendance_id(rs.getInt("attendance_id"));
-
-				attendance.setEmployee_id(rs.getInt("employee_id"));
-
-				attendance.setAttendance_date(rs.getDate("attendance_date"));
-
-				attendance.setCheck_in_time(rs.getTime("check_in"));
-
-				attendance.setCheck_in_time(rs.getTime("check_out"));
-
-				attendance.setStatus(rs.getString("status"));
-
-				attendanceList.add(attendance);
-			}
+			return rs.next();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return attendanceList;
-	}
-
-	@Override
-	public List<Attendance> getAllAttendance() {
-
-		List<Attendance> attendanceList = new ArrayList<>();
-
-		String sql = "SELECT * FROM attendance ORDER BY attendance_date DESC";
-
-		try (Connection con = DbUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-
-			ResultSet rs = ps.executeQuery();
-
-			while (rs.next()) {
-
-				Attendance attendance = new Attendance();
-
-				attendance.setAttendance_id(rs.getInt("attendance_id"));
-
-				attendance.setEmployee_id(rs.getInt("employee_id"));
-
-				attendance.setAttendance_date(rs.getDate("attendance_date"));
-
-				attendance.setCheck_in_time(rs.getTime("check_in"));
-
-				attendance.setCheck_in_time(rs.getTime("check_out"));
-
-				attendance.setStatus(rs.getString("status"));
-
-				attendanceList.add(attendance);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return attendanceList;
+		return false;
 	}
 
 	@Override
 	public int getPresentCount(Date date) {
-		return getCount(date, "present");
 
-	}
+		String sql = "SELECT COUNT(*) FROM attendance " + "WHERE attendance_date=? AND status='PRESENT'";
 
-	@Override
-	public int getAbsentCount(Date date) {
-		return getCount(date,"absent");
-	}
-
-	@Override
-	public int getHalfDayCount(Date date) {
-		return getCount(date,"halfday");
-
-	}
-
-	private int getCount(Date date, String status) {
-
-		int count = 0;
-
-		String sql = "SELECT COUNT(*) FROM attendance WHERE attendance_date=? AND status=?";
-
-		try (Connection con = DbUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection conn = DbUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setDate(1, date);
-			ps.setString(2, status);
 
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				count = rs.getInt(1);
+				return rs.getInt(1);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return count;
+		return 0;
+	}
+	@Override
+	public int getAbsentCount(Date date) {
+
+		String sql = "SELECT COUNT(*) FROM attendance " + "WHERE attendance_date=? AND status='ABSENT'";
+
+		try (Connection conn = DbUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setDate(1, date);
+
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return 0;
 	}
 
+	@Override
+	public int getHalfDayCount(Date date) {
+
+		String sql = "SELECT COUNT(*) FROM attendance " + "WHERE attendance_date=? AND status='HALF_DAY'";
+
+		try (Connection conn = DbUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setDate(1, date);
+
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+	@Override
+	public List<Attendance> getAttendanceByManager(int managerId) {
+
+	    List<Attendance> list = new ArrayList<>();
+
+	    String sql =
+	            "SELECT a.*, e.name AS employee_name " +
+	            "FROM attendance a " +
+	            "INNER JOIN employees e " +
+	            "ON a.employee_id = e.employee_id " +
+	            "WHERE e.manager_id = ? " +
+	            "ORDER BY a.attendance_date DESC, e.name ASC";
+
+	    try (
+	        Connection conn = DbUtil.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(sql)
+	    ) {
+
+	        ps.setInt(1, managerId);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+
+	            Attendance attendance = new Attendance();
+
+	            attendance.setAttendance_id(
+	                    rs.getInt("attendance_id"));
+
+	            attendance.setEmployee_id(
+	                    rs.getInt("employee_id"));
+
+	            attendance.setAttendance_date(
+	                    rs.getDate("attendance_date"));
+
+	            attendance.setCheck_in_time(
+	                    rs.getTime("check_in"));
+
+	            attendance.setCheck_out_time(
+	                    rs.getTime("check_out"));
+
+	            attendance.setStatus(
+	                    rs.getString("status"));
+
+	            // Set employee name
+	            attendance.setEmployeeName(
+	                    rs.getString("employee_name"));
+
+	            list.add(attendance);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return list;
+	}
+	@Override
+	public int getPresentCountByManager(Date date, int managerId) {
+
+	    String sql =
+	            "SELECT COUNT(*) " +
+	            "FROM attendance a " +
+	            "INNER JOIN employees e " +
+	            "ON a.employee_id = e.employee_id " +
+	            "WHERE a.attendance_date = ? " +
+	            "AND a.status = 'PRESENT' " +
+	            "AND e.manager_id = ?";
+
+	    try (
+	        Connection conn = DbUtil.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(sql)
+	    ) {
+
+	        ps.setDate(1, date);
+	        ps.setInt(2, managerId);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getInt(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return 0;
+	}
+	@Override
+	public int getAbsentCountByManager(Date date, int managerId) {
+
+	    String sql =
+	            "SELECT COUNT(*) " +
+	            "FROM attendance a " +
+	            "INNER JOIN employees e " +
+	            "ON a.employee_id = e.employee_id " +
+	            "WHERE a.attendance_date = ? " +
+	            "AND a.status = 'ABSENT' " +
+	            "AND e.manager_id = ?";
+
+	    try (
+	        Connection conn = DbUtil.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(sql)
+	    ) {
+
+	        ps.setDate(1, date);
+	        ps.setInt(2, managerId);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getInt(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return 0;
+	}
+	@Override
+	public int getHalfDayCountByManager(Date date, int managerId) {
+
+	    String sql =
+	            "SELECT COUNT(*) " +
+	            "FROM attendance a " +
+	            "INNER JOIN employees e " +
+	            "ON a.employee_id = e.employee_id " +
+	            "WHERE a.attendance_date = ? " +
+	            "AND a.status IN ('HALF_DAY', 'Half Day') " +
+	            "AND e.manager_id = ?";
+
+	    try (
+	        Connection conn = DbUtil.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(sql)
+	    ) {
+
+	        ps.setDate(1, date);
+	        ps.setInt(2, managerId);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getInt(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return 0;
+	}
 }

@@ -1,401 +1,349 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
+<%
+String role = (String) session.getAttribute("role");
+String adminName = (String) session.getAttribute("username");
+
+if (role == null || !"ADMIN".equalsIgnoreCase(role)) {
+	response.sendRedirect("login.jsp");
+	return;
+}
+
+if (adminName == null || adminName.trim().isEmpty()) {
+	adminName = "Administrator";
+}
+
+String initials = "";
+String[] parts = adminName.split(" ");
+
+for (String p : parts) {
+	if (!p.isEmpty()) {
+		initials += p.substring(0, 1).toUpperCase();
+	}
+}
+
+if (initials.isEmpty()) {
+	initials = "A";
+}
+%>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard - ELAMS</title>
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	font-family: 'Segoe UI', sans-serif;
+}
+
+:root {
+	--primary: #6366f1;
+	--secondary: #8b5cf6;
+	--danger: #ef4444;
+	--dark: #1f2937;
+	--light: #f9fafb;
+	--card: #ffffff;
+	--border: #e5e7eb;
 }
 
 body {
-	font-family: 'Arial', sans-serif;
-	background-color: #f5f5f5;
-	color: #333;
-	line-height: 1.6;
+	overflow: hidden;
+	background: #f5f7fb;
 }
 
-/* Header/Navbar */
-.navbar {
-	background-color: #2c3e50;
+/* Sidebar */
+.sidebar {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 280px;
+	height: 100vh;
+	background: linear-gradient(135deg, #1f2937, #111827);
+	transition: .4s;
+	z-index: 1000;
+}
+
+.sidebar.hide {
+	left: -280px;
+}
+
+.logo {
+	height: 90px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 12px;
 	color: white;
+	font-size: 28px;
+	font-weight: 700;
+	background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.sidebar ul {
+	list-style: none;
+	padding: 20px 0;
+}
+
+.sidebar ul li {
+	margin: 8px 12px;
+}
+
+.sidebar ul li a {
+	display: flex;
+	align-items: center;
+	gap: 15px;
 	padding: 15px 20px;
+	text-decoration: none;
+	color: #e5e7eb;
+	border-radius: 10px;
+	transition: .3s;
+}
+
+.sidebar ul li a:hover, .sidebar ul li a.active {
+	background: rgba(99, 102, 241, .2);
+	color: white;
+}
+
+.sidebar ul li a i {
+	width: 25px;
+	text-align: center;
+}
+
+/* Header */
+.header {
+	position: fixed;
+	top: 0;
+	left: 280px;
+	right: 0;
+	height: 90px;
+	background: white;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	padding: 0 30px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+	transition: .4s;
 }
 
-.navbar h1 {
+.header.full {
+	left: 0;
+}
+
+.header-title {
 	font-size: 24px;
-	font-weight: bold;
+	font-weight: 700;
+	color: var(--primary);
 }
 
-.navbar .logout-btn {
-	background-color: #e74c3c;
-	color: white;
-	padding: 8px 15px;
-	border-radius: 4px;
-	text-decoration: none;
-	transition: background-color 0.3s;
+.menu-btn {
+	display: none;
+	font-size: 24px;
+	cursor: pointer;
+	margin-right: 20px;
 }
 
-.navbar .logout-btn:hover {
-	background-color: #c0392b;
+.menu-btn.show {
+	display: block;
 }
 
-/* Main Container */
-.container {
-	max-width: 1200px;
-	margin: 30px auto;
-	padding: 0 20px;
+.header-left {
+	display: flex;
+	align-items: center;
 }
 
-.page-title {
-	font-size: 28px;
-	color: #2c3e50;
-	margin-bottom: 30px;
-	border-bottom: 3px solid #3498db;
-	padding-bottom: 10px;
-}
-
-/* Dashboard Cards Grid */
-.dashboard-cards {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+.header-right {
+	display: flex;
+	align-items: center;
 	gap: 20px;
-	margin-bottom: 50px;
 }
 
-.card {
-	background-color: white;
-	border: 2px solid #bdc3c7;
-	border-radius: 8px;
-	padding: 25px;
-	text-align: center;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-	transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-}
-
-.card:hover {
-	transform: translateY(-5px);
-	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-	border-color: #3498db;
-}
-
-/* Card Colors based on type */
-.card.total {
-	border-left: 5px solid #3498db;
-}
-
-.card.present {
-	border-left: 5px solid #27ae60;
-}
-
-.card.absent {
-	border-left: 5px solid #e74c3c;
-}
-
-.card.pending {
-	border-left: 5px solid #f39c12;
-}
-
-.card h3 {
-	font-size: 14px;
-	color: #7f8c8d;
-	text-transform: uppercase;
-	letter-spacing: 1px;
-	margin-bottom: 15px;
-	font-weight: 600;
-}
-
-.card .icon {
-	font-size: 40px;
-	margin-bottom: 10px;
-}
-
-.card .count {
-	font-size: 42px;
-	font-weight: bold;
-	color: #2c3e50;
-	margin: 15px 0;
-}
-
-.card .subtitle {
-	font-size: 12px;
-	color: #95a5a6;
-}
-
-/* Divider */
-.divider {
-	margin: 40px 0;
-	border: none;
-	border-top: 2px solid #bdc3c7;
-}
-
-/* Actions Section */
-.actions-section {
-	background-color: white;
-	border: 2px solid #bdc3c7;
-	border-radius: 8px;
-	padding: 30px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.actions-section h2 {
-	font-size: 20px;
-	color: #2c3e50;
-	margin-bottom: 25px;
-	border-bottom: 2px solid #3498db;
-	padding-bottom: 10px;
-}
-
-.actions-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-	gap: 15px;
-}
-
-.action-link {
-	background-color: #3498db;
+.avatar {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, var(--primary), var(--secondary));
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	color: white;
-	padding: 15px 20px;
-	text-align: center;
-	text-decoration: none;
-	border-radius: 6px;
-	border: 2px solid #3498db;
-	font-weight: 600;
-	transition: all 0.3s;
-	display: inline-block;
+	font-weight: bold;
+}
+
+.logout-btn {
+	padding: 10px 15px;
+	border: none;
+	border-radius: 8px;
+	background: var(--danger);
+	color: white;
 	cursor: pointer;
 }
 
-.action-link:hover {
-	background-color: #2980b9;
-	border-color: #2980b9;
-	transform: translateY(-2px);
-	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+/* Content */
+.content {
+	margin-left: 280px;
+	margin-top: 90px;
+	height: calc(100vh - 90px);
+	padding: 25px;
+	transition: .4s;
 }
 
-.action-link.danger {
-	background-color: #e74c3c;
-	border-color: #e74c3c;
+.content.full {
+	margin-left: 0;
 }
 
-.action-link.danger:hover {
-	background-color: #c0392b;
-	border-color: #c0392b;
+.content iframe {
+	width: 100%;
+	height: 100%;
+	border: none;
+	border-radius: 15px;
+	background: white;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
 }
 
-/* Footer */
-footer {
-	background-color: #2c3e50;
-	color: white;
-	text-align: center;
-	padding: 20px;
-	margin-top: 50px;
-	font-size: 12px;
-}
-
-/* Responsive Design */
-@media ( max-width : 768px) {
-	.navbar {
-		flex-direction: column;
-		gap: 15px;
+/* Responsive */
+@media ( max-width :768px) {
+	.sidebar {
+		left: -280px;
 	}
-	.page-title {
-		font-size: 22px;
+	.header {
+		left: 0;
 	}
-	.dashboard-cards {
-		grid-template-columns: 1fr;
+	.content {
+		margin-left: 0;
 	}
-	.actions-grid {
-		grid-template-columns: 1fr;
+	.menu-btn {
+		display: block;
 	}
-	.card .count {
-		font-size: 32px;
-	}
-	.container {
-		margin: 20px auto;
-	}
-}
-
-/* Loading Animation */
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-		transform: translateY(10px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-.card {
-	animation: fadeIn 0.5s ease-out;
-}
-
-.card:nth-child(1) {
-	animation-delay: 0.1s;
-}
-
-.card:nth-child(2) {
-	animation-delay: 0.2s;
-}
-
-.card:nth-child(3) {
-	animation-delay: 0.3s;
-}
-
-.card:nth-child(4) {
-	animation-delay: 0.4s;
-}
-
-/* Status Indicators */
-.status-indicator {
-	display: inline-block;
-	width: 12px;
-	height: 12px;
-	border-radius: 50%;
-	margin-right: 8px;
-}
-
-.status-indicator.success {
-	background-color: #27ae60;
-}
-
-.status-indicator.danger {
-	background-color: #e74c3c;
-}
-
-.status-indicator.warning {
-	background-color: #f39c12;
-}
-
-.status-indicator.info {
-	background-color: #3498db;
 }
 </style>
-
 </head>
 
 <body>
 
-	<!-- Navigation Bar -->
-	<div class="navbar">
-		<h1>ELAMS - Admin Dashboard</h1>
-		<a href="logout" class="logout-btn">Logout</a>
+	<div class="sidebar" id="sidebar">
+
+		<div class="logo">
+			<i class="fa-solid fa-layer-group"></i> ELAMS
+		</div>
+
+		<ul>
+
+			<li><a href="adminHome.jsp" target="contentFrame"
+				onclick="loadPage(this)" class="active"> <i
+					class="fa-solid fa-gauge"></i> Dashboard
+			</a></li>
+
+			<li><a href="viewEmployeesServlet" target="contentFrame"
+				onclick="loadPage(this)"> <i class="fa-solid fa-users"></i>
+					Employees
+			</a></li>
+
+			<li><a href="attendance.jsp" target="contentFrame"
+				onclick="loadPage(this)"> <i class="fa-solid fa-calendar-check"></i>
+					Attendance
+			</a></li>
+
+			<li><a href="leaveRequests" target="contentFrame"
+				onclick="loadPage(this)"> <i class="fa-solid fa-file-signature"></i>
+					Leave Requests
+			</a></li>
+
+			<li><a href="reports" target="contentFrame"
+				onclick="loadPage(this)"> <i class="fa-solid fa-chart-line"></i>
+					Reports
+			</a></li>
+
+			<li><a href="logout"> <i
+					class="fa-solid fa-right-from-bracket"></i> Logout
+			</a></li>
+
+		</ul>
+
 	</div>
 
-	<!-- Main Container -->
-	<div class="container">
+	<div class="header" id="header">
 
-		<!-- Page Title -->
-		<h2 class="page-title">Dashboard Overview</h2>
+		<div class="header-left">
 
-		<!-- Dashboard Statistics Cards -->
-		<div class="dashboard-cards">
+			<i class="fa-solid fa-bars menu-btn" id="menuBtn"
+				onclick="toggleSidebar()"></i>
 
-			<!-- Total Employees Card -->
-			<div class="card total">
-				<div class="icon">👥</div>
-				<h3>Total Employees</h3>
-				<div class="count">
-					<%
-					Object employeeCount = request.getAttribute("employeeCount");
-					out.print(employeeCount != null ? employeeCount : "0");
-					%>
-				</div>
-				<div class="subtitle">Active employees in system</div>
-			</div>
-
-			<!-- Present Today Card -->
-			<div class="card present">
-				<div class="icon">✓</div>
-				<h3>Present Today</h3>
-				<div class="count">
-					<%
-					Object presentCount = request.getAttribute("presentCount");
-					out.print(presentCount != null ? presentCount : "0");
-					%>
-				</div>
-				<div class="subtitle">Employees marked present</div>
-			</div>
-
-			<!-- Absent Today Card -->
-			<div class="card absent">
-				<div class="icon">✕</div>
-				<h3>Absent Today</h3>
-				<div class="count">
-					<%
-					Object absentCount = request.getAttribute("absentCount");
-					out.print(absentCount != null ? absentCount : "0");
-					%>
-				</div>
-				<div class="subtitle">Employees marked absent</div>
-			</div>
-
-			<!-- Pending Leaves Card -->
-			<div class="card pending">
-				<div class="icon">⏳</div>
-				<h3>Pending Leaves</h3>
-				<div class="count">
-					<%
-					Object pendingLeaves = request.getAttribute("pendingLeaves");
-					out.print(pendingLeaves != null ? pendingLeaves : "0");
-					%>
-				</div>
-				<div class="subtitle">Awaiting your approval</div>
+			<div class="header-title">
+				<i class="fa-solid fa-user-shield"></i> Admin Portal
 			</div>
 
 		</div>
 
-		<!-- Divider -->
-		<hr class="divider">
+		<div class="header-right">
 
-		<!-- Actions Section -->
-		<div class="actions-section">
-			<h2>Quick Actions</h2>
-			<div class="actions-grid">
-				<a href="viewEmployeesServlet" class="action-link">Manage Employees</a>
-				<a href="attendance.jsp" class="action-link">Mark Attendance</a>
-				<a href="leaveRequests" class="action-link">Manage Leave Requests</a>
-				<a href="reports" class="action-link">View Reports</a>
-				<a href="logout" class="action-link danger">Logout</a>
+			<div class="avatar">
+				<%=initials%>
 			</div>
+
+			<div>
+				<strong><%=adminName%></strong><br> <small>Administrator</small>
+			</div>
+
+			<form action="logout" method="post">
+				<button class="logout-btn">
+					<i class="fa-solid fa-power-off"></i> Logout
+				</button>
+			</form>
+
 		</div>
 
 	</div>
 
-	<!-- Footer -->
-	<footer>
-		<p>&copy; 2024 ELAMS - Employee Leave & Attendance Management
-			System. All rights reserved.</p>
-	</footer>
+	<div class="content" id="content">
+		<iframe name="contentFrame" src="adminHome.jsp"></iframe>
+	</div>
 
 	<script>
-		// Add click confirmation for important actions
-		document.querySelectorAll('.action-link.danger').forEach(
-				function(link) {
-					link.addEventListener('click', function(e) {
-						if (!confirm('Are you sure you want to logout?')) {
-							e.preventDefault();
-						}
-					});
-				});
 
-		// Optional: Auto-refresh every 5 minutes
-		// Uncomment the line below to enable auto-refresh
-		// setTimeout(function() { location.reload(); }, 300000);
-	</script>
+function toggleSidebar(){
+
+    const sidebar=document.getElementById("sidebar");
+    const header=document.getElementById("header");
+    const content=document.getElementById("content");
+    const menuBtn=document.getElementById("menuBtn");
+
+    sidebar.classList.toggle("hide");
+
+    if(sidebar.classList.contains("hide")){
+        header.classList.add("full");
+        content.classList.add("full");
+        menuBtn.classList.add("show");
+    }
+    else{
+        header.classList.remove("full");
+        content.classList.remove("full");
+        menuBtn.classList.remove("show");
+    }
+}
+
+function loadPage(link){
+
+    document.querySelectorAll(".sidebar a")
+    .forEach(a=>a.classList.remove("active"));
+
+    link.classList.add("active");
+
+    document.getElementById("sidebar").classList.add("hide");
+    document.getElementById("header").classList.add("full");
+    document.getElementById("content").classList.add("full");
+    document.getElementById("menuBtn").classList.add("show");
+}
+
+</script>
 
 </body>
 </html>

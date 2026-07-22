@@ -25,12 +25,22 @@ public class AuthenticationFilter implements Filter {
 		String uri = req.getRequestURI();
 
 		// Public resources
-		if (uri.endsWith("login.jsp") || uri.endsWith("/login") || uri.endsWith("register.jsp") || uri.contains("/css/")
-				|| uri.contains("/js/") || uri.contains("/images/") || uri.endsWith(".css") || uri.endsWith(".js")
-				|| uri.endsWith(".png") || uri.endsWith(".jpg") || uri.endsWith(".jpeg") || uri.endsWith("/")) {
+		if (uri.endsWith("login.jsp")
+		        || uri.endsWith("/login")
+		        || uri.contains("/register")
+		        || uri.contains("/forgotPassword")
+		        || uri.contains("/css/")
+		        || uri.contains("/js/")
+		        || uri.contains("/images/")
+		        || uri.endsWith(".css")
+		        || uri.endsWith(".js")
+		        || uri.endsWith(".png")
+		        || uri.endsWith(".jpg")
+		        || uri.endsWith(".jpeg")
+		        || uri.endsWith("/")) {
 
-			chain.doFilter(request, response);
-			return;
+		    chain.doFilter(request, response);
+		    return;
 		}
 
 		HttpSession session = req.getSession(false);

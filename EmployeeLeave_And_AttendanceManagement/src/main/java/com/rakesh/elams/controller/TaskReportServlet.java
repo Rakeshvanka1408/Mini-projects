@@ -16,29 +16,36 @@ public class TaskReportServlet extends HttpServlet {
 
     TaskDao dao = new TaskDaoImpl();
 
-    protected void doGet(HttpServletRequest request,
+    protected void doGet(
+            HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
 
+        HttpSession session =
+                request.getSession(false);
+
+        Integer managerId =
+                (Integer) session.getAttribute("employeeId");
+
         request.setAttribute(
                 "totalTasks",
-                dao.getTotalTasks());
+                dao.getTotalTasks(managerId));
 
         request.setAttribute(
                 "completedTasks",
-                dao.getCompletedTasks());
+                dao.getCompletedTasks(managerId));
 
         request.setAttribute(
                 "pendingTasks",
-                dao.getPendingTasks());
+                dao.getPendingTasks(managerId));
 
         request.setAttribute(
                 "inProgressTasks",
-                dao.getInProgressTasks());
+                dao.getInProgressTasks(managerId));
 
         request.setAttribute(
                 "overdueTasks",
-                dao.getOverdueTasks());
+                dao.getOverdueTasks(managerId));
 
         request.getRequestDispatcher(
                 "taskReport.jsp")

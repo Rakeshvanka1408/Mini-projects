@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/ManagerViewEmployeesServlet")
 public class ManagerViewEmployeesServlet extends HttpServlet {
@@ -19,14 +20,24 @@ public class ManagerViewEmployeesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
+    	HttpSession session = request.getSession(false);
 
-        EmployeeDao dao = new EmployeeDaoImpl();
+    	if (session == null) {
+    	    response.sendRedirect("login.jsp");
+    	    return;
+    	}
 
-        List<Employee> employees = dao.getAllEmployees();
+    	Integer managerId =
+    	        (Integer) session.getAttribute("employeeId");
 
-        request.setAttribute("employees", employees);
+    	EmployeeDao dao = new EmployeeDaoImpl();
 
-        request.getRequestDispatcher("managerEmployee.jsp")
-               .forward(request, response);
+    	List<Employee> employees =
+    	        dao.getEmployeesByManager(managerId);
+
+    	request.setAttribute("employees", employees);
+
+    	request.getRequestDispatcher("managerEmployee.jsp")
+    	       .forward(request, response);
     }
 }

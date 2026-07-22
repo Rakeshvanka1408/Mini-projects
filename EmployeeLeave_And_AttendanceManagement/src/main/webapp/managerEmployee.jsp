@@ -72,17 +72,17 @@ body {
 	animation: slideDown 0.5s ease-out;
 }
 
-@keyframes slideDown {
-	from {
-		opacity: 0;
-		transform: translateY(-20px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+@
+keyframes slideDown {from { opacity:0;
+	transform: translateY(-20px);
 }
 
+to {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+}
 .header i {
 	font-size: 36px;
 	background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -107,17 +107,17 @@ body {
 	animation: slideUp 0.6s ease-out;
 }
 
-@keyframes slideUp {
-	from {
-		opacity: 0;
-		transform: translateY(20px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+@
+keyframes slideUp {from { opacity:0;
+	transform: translateY(20px);
 }
 
+to {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+}
 .card {
 	background: white;
 	padding: 30px;
@@ -136,7 +136,8 @@ body {
 	right: 0;
 	width: 100px;
 	height: 100px;
-	background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+	background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%,
+		transparent 70%);
 	border-radius: 50%;
 	transform: translate(30px, -30px);
 	pointer-events: none;
@@ -305,69 +306,56 @@ tbody tr:last-child td {
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
+@media ( max-width : 1024px) {
 	.table-wrapper {
 		max-height: 550px;
 	}
-
 	th, td {
 		padding: 12px 10px;
 	}
-
 	table {
 		font-size: 13px;
 	}
 }
 
-@media (max-width: 768px) {
+@media ( max-width : 768px) {
 	body {
 		padding: 20px 15px;
 	}
-
 	.container {
 		max-width: 100%;
 	}
-
 	.header {
 		flex-direction: column;
 		align-items: flex-start;
 		margin-bottom: 25px;
 	}
-
 	.header h1 {
 		font-size: 24px;
 	}
-
 	.summary {
 		grid-template-columns: 1fr;
 		margin-bottom: 20px;
 	}
-
 	.card {
 		padding: 20px;
 	}
-
 	.card .count {
 		font-size: 36px;
 	}
-
 	.table-wrapper {
 		max-height: 450px;
 	}
-
 	th, td {
 		padding: 12px 8px;
 	}
-
 	table {
 		font-size: 12px;
 	}
-
 	.badge {
 		font-size: 11px;
 		padding: 5px 12px;
 	}
-
 	.email-cell, .phone-cell {
 		flex-direction: column;
 		align-items: flex-start;
@@ -375,49 +363,39 @@ tbody tr:last-child td {
 	}
 }
 
-@media (max-width: 480px) {
+@media ( max-width : 480px) {
 	body {
 		padding: 15px 10px;
 	}
-
 	.header i {
 		font-size: 28px;
 	}
-
 	.header h1 {
 		font-size: 20px;
 	}
-
 	.summary {
 		gap: 12px;
 	}
-
 	.card {
 		padding: 16px;
 	}
-
 	.card h3 {
 		font-size: 12px;
 	}
-
 	.card .count {
 		font-size: 32px;
 	}
-
 	.table-wrapper {
 		max-height: 400px;
 	}
-
 	th, td {
 		padding: 10px 6px;
 		font-size: 11px;
 	}
-
 	.badge {
 		font-size: 10px;
 		padding: 4px 10px;
 	}
-
 	.employee-id {
 		font-size: 13px;
 	}
@@ -476,6 +454,7 @@ tbody tr:last-child td {
 							<th><i class="fa-solid fa-phone"></i> Phone</th>
 							<th><i class="fa-solid fa-building"></i> Department</th>
 							<th><i class="fa-solid fa-briefcase"></i> Designation</th>
+							<th><i class="fa-solid fa-user-tie"></i> Reports To</th>
 						</tr>
 					</thead>
 
@@ -485,41 +464,31 @@ tbody tr:last-child td {
 						%>
 
 						<tr>
-							<td>
-								<span class="employee-id">
-									<i class="fa-solid fa-circle-user"></i> EMP-<%=emp.getEmployee_id()%>
-								</span>
-							</td>
+							<td><span class="employee-id"> <i
+									class="fa-solid fa-circle-user"></i> EMP-<%=emp.getEmployee_id()%>
+							</span></td>
 
-							<td>
-								<strong><%=emp.getEmployee_name()%></strong>
-							</td>
+							<td><strong><%=emp.getEmployee_name()%></strong></td>
 
 							<td>
 								<div class="email-cell">
-									<i class="fa-solid fa-envelope"></i>
-									<span><%=emp.getEmail()%></span>
+									<i class="fa-solid fa-envelope"></i> <span><%=emp.getEmail()%></span>
 								</div>
 							</td>
 
 							<td>
 								<div class="phone-cell">
-									<i class="fa-solid fa-phone"></i>
-									<span><%=emp.getPhone()%></span>
+									<i class="fa-solid fa-phone"></i> <span><%=emp.getPhone()%></span>
 								</div>
 							</td>
 
-							<td>
-								<span class="badge department">
-									<%=emp.getDepartment()%>
-								</span>
-							</td>
+							<td><span class="badge department"> <%=emp.getDepartment()%>
+							</span></td>
 
-							<td>
-								<span class="badge designation">
-									<%=emp.getDesignation()%>
-								</span>
-							</td>
+							<td><span class="badge designation"> <%=emp.getDesignation()%>
+							</span></td>
+							<td><span class="badge designation"> <%=emp.getManagerName()%>
+							</span></td>
 						</tr>
 
 						<%

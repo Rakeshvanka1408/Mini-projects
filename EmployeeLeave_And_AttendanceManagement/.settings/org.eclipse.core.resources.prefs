@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//src/main/webapp/adminDashboard.jsp=UTF-8
 encoding//src/main/webapp/editTasks.jsp=UTF-8
+encoding//src/main/webapp/employeeHome.jsp=UTF-8
 encoding//src/main/webapp/employeeTasks.jsp=UTF-8
 encoding//src/main/webapp/managerEmployee.jsp=UTF-8
 encoding//src/main/webapp/managerHome.jsp=UTF-8
